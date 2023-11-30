@@ -9,7 +9,7 @@
 #define SF_APP_BLE_INIT_SYSTEM_CONFIG_PORTS_H_
 
 /** Buttons for device */
-#define PORT_INT0			WICED_P26
+//#define PORT_INT0			WICED_P26
 #define PORT_INT_ACUSE		WICED_P07
 #define PORT_INT_ON_OFF		WICED_P10
 
@@ -17,7 +17,7 @@
 #define LED_PIN_GREEN		WICED_P00
 #define LED_PIN_BLUE		WICED_P01
 #define LED_PIN_RED			WICED_P02
-//#define LED_CHARGE			WICED_P26
+#define LED_CHARGE			WICED_P26
 #define LED_CONECTION		WICED_P28
 #define LED_WARNING			WICED_P29
 #define LED_VEHICLE			WICED_P34

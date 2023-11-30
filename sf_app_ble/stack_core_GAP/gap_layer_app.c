@@ -426,7 +426,7 @@ void mesh_set_app_advertisement_data(void)
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
 	wiced_result_t         result;
-    wiced_bt_ble_advert_elem_t adv_elem[2];
+    wiced_bt_ble_advert_elem_t adv_elem[4];
     uint8_t num_elem = 0;
     uint8_t flag = BTM_BLE_GENERAL_DISCOVERABLE_FLAG | BTM_BLE_BREDR_NOT_SUPPORTED;
 
@@ -436,8 +436,18 @@ void mesh_set_app_advertisement_data(void)
     num_elem++;
 
     adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len          = strlen((const char *)data_name_node);
-    adv_elem[num_elem].p_data       = (uint8_t*)data_name_node;
+    adv_elem[num_elem].len          = strlen((const char *)"MESH1 BSL");
+    adv_elem[num_elem].p_data       = (uint8_t*)"MESH1 BSL";
+    num_elem++;
+
+    adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
+    adv_elem[num_elem].len			= sizeof(mesh_device);
+    adv_elem[num_elem].p_data		= mesh_device;
+    num_elem++;
+
+    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
+    adv_elem[num_elem].len          = sizeof(mesh_beacon);
+    adv_elem[num_elem].p_data       = mesh_beacon;
     num_elem++;
 
     wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);

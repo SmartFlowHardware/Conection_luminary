@@ -41,7 +41,8 @@ void create_network(void)
     memset(&node, 0, sizeof(node));				// Clean the structure
 
     node.addr = EMBEDDED_PROV_LOCAL_ADDR;			// Set the address provisioner application (Is the First Node)
-    //node.last_addr = EMBEDDED_PROV_LOCAL_ADDR + 1;	// Set the last address provisioner application (Is the Next Node)
+    node.last_addr = EMBEDDED_PROV_LOCAL_ADDR + 1;	// Set the last address provisioner application (Is the Next Node)
+    node.max_dst = EMBEDDED_PROV_HOPS;				// Set the hops through the Network to destiny, default is 2
 
     // Create the Network Key
     *(uint8_t*)&node.fil_key_node[0] = wiced_hal_rand_gen_num();
@@ -82,6 +83,23 @@ void create_network(void)
 //#endif
 }
 
+
+/*
+ * Mesh device is being factory reset. Clean up NVRAM used by the app.
+ */
+void mesh_app_factory_reset(void)
+{
+	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+
+    int i;
+    wiced_result_t result;
+
+    // if it was a factory reset, make sure to clean up NVRAM (information about nodes)
+    for (i = EMBEDDED_PROV_NODE_ADDR_FIRST; i < EMBEDDED_PROV_NODE_ADDR_LAST; i++)
+    {
+        wiced_hal_delete_nvram(i, &result);
+    }
+}
 
 
 //char* transmit_node_data(mesh_node_t node)

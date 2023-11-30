@@ -232,6 +232,7 @@ void							handle_OTA_change_reset( uint32_t data );
 void							event_select_OTA(void);
 
 extern void						gap_stack_init(void);
+extern void						mesh_app_factory_reset(void);
 
 
 /***********************************************************************************************************************************
@@ -292,6 +293,8 @@ APPLICATION_START()
 
         // Register call back and configuration with stack
         wiced_bt_stack_init( app_management_callback, &app_cfg_settings, app_buf_pools );
+
+        mesh_app_factory_reset();
     }
     else
     {

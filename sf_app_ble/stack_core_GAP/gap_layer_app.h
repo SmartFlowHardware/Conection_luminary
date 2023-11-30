@@ -35,9 +35,11 @@
  *  Global Variables Declarations
  ***********************************************************************************************************************************/
 
-uint8_t filt_SPI[3] = { 0x53,0x50,0x49};
-uint8_t filt_NULL[3] = { 0x31,0x31,0x31};
+uint8_t filt_SPI[3] = {0x53,0x50,0x49};
+uint8_t filt_NULL[3] = {0x31,0x31,0x31};
 uint8_t data_mcc[6];
+
+uint8_t mesh_device[] = {0x00, 0x00, 0x00};
 
 wiced_bool_t	is_provisioned;
 

@@ -288,7 +288,7 @@ void init_mac_logs(void)
 	{
 		// Set a default Mac Address in 'bda' array
 		WICED_BT_TRACE("Mac Address Null\n");
-		bda[0]=0x10;
+		bda[0]=0x11;
 		bda[1]=0x10;
 		bda[2]=0x10;
 		bda[3]=0x10;

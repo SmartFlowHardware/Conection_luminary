@@ -47,7 +47,6 @@
 #include "config_ports.h"
 #include "wiced_hal_gpio.h"
 #include "wiced_bt_uuid.h"
-//#include "biometric_functions.h"
 
 
 /************************************************************************************************************************************
@@ -98,7 +97,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     /* --- Filters --- */
     if( p_scan_result && p_scan_result->rssi > -48 )
     {
-    	/* Search for Name element in the Advertisement data received. Check for complete list Advertisement data from Devices */
+    	/* Search for Name element/Device element in the Advertisement data received. */
     	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
     	p_device_class = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_DEV_CLASS, &length_scan_node );
 
@@ -112,8 +111,9 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 //    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
 //    	WICED_BT_TRACE_ARRAY(p_adv_data, 19, "Advertisement Package: ");
 
+    	/** Filters without connection */
     	// The Lamp Device is found
-    	if( memcmp(filter_lamp, p_data_name, sizeof(filter_lamp)) == 0 )
+    	if( !memcmp(filter_lamp, p_data_name, sizeof(filter_lamp)) )
     	{
     		//WICED_BT_TRACE("FIND LAMP RSSI:%d\r\n", p_scan_result->rssi);
     		find_lamp = WICED_TRUE;
@@ -122,7 +122,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	}
 
     	// The Tag Device is found
-    	if( memcmp(filter_tag, p_data_name, sizeof(filter_tag)) == 0 )
+    	if( !memcmp(filter_tag, p_data_name, sizeof(filter_tag)) )
     	{
     		//WICED_BT_TRACE("FIND TAG RSSI:%d\r\n", p_scan_result->rssi);
     		find_tag = WICED_TRUE;
@@ -130,8 +130,10 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     		start_tag_timer();
     	}
 
+
+    	/** Filters that required connection */
     	// The Node Device is Found
-    	if( memcmp(filter_node, p_device_class, sizeof(filter_node)) == 0 )
+    	if( !memcmp(filter_node_dev, p_device_class, sizeof(filter_node_dev)) )
     	{
     		WICED_BT_TRACE("FIND NODE RSSI:%d\r\n", p_scan_result->rssi);
     		find_node = WICED_TRUE;

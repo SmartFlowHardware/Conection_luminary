@@ -166,7 +166,7 @@ void button_cback_acuse( void *data, uint8_t port_pin )
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-    uint32_t value_acuse = wiced_hal_gpio_get_pin_input_status(PORT_INT0);
+    uint32_t value_acuse = wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE);
     //uint32_t current_time_acuse = wiced_bt_mesh_core_get_tick_count();
     uint32_t button_pushed_duration_acuse;
 
@@ -186,9 +186,9 @@ void button_cback_acuse( void *data, uint8_t port_pin )
     	return;
     }
 
-    WICED_BT_TRACE("STATE OF BUTTON:%d\r\n", wiced_hal_gpio_get_pin_input_status(PORT_INT0));
+    WICED_BT_TRACE("STATE OF BUTTON:%d\r\n", wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE));
     // Check if the button is pressed
-    if(wiced_hal_gpio_get_pin_input_status(PORT_INT0) == GPIO_PIN_OUTPUT_HIGH)
+    if(wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE) == GPIO_PIN_OUTPUT_HIGH)
     {
         WICED_BT_TRACE("interrupt_handler: button pressed pin:%d value:%d current_time:%d\n", port_pin, value_acuse);// current_time_acuse);
 
