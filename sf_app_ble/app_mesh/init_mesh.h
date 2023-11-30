@@ -54,6 +54,7 @@ typedef struct
 mesh_node_t node;
 
 void create_network(void);
+//char* transmit_node_data(mesh_node_t node);
 void self_configure(uint16_t node_addr);
 
 #endif /* SF_APP_BLE_APP_MESH_INIT_MESH_H_ */

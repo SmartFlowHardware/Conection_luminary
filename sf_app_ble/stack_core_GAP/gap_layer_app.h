@@ -43,6 +43,8 @@ wiced_bool_t	is_provisioned;
 
 char data_txsf[16];	// Original uint8_t data_txsf[16];
 
+char* data_name_node;
+
 uint8_t mesh_beacon[]={'H','E','L','L','O','\n'};
 
 
@@ -150,6 +152,7 @@ extern void                     event_recover_OTA(void);
 extern void 					separate_array_into_two( uint8_t *p_url_beacon, char *p_array_ten, uint8_t *p_array_six );
 
 extern wiced_bt_gatt_status_t 	beacon_gatt_callback( wiced_bt_gatt_evt_t event, wiced_bt_gatt_event_data_t *p_event_data );
+
 
 
 

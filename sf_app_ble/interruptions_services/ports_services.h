@@ -22,6 +22,7 @@ uint32_t      button_previous_value_onoff;
  ***********************************************************************************************************************************/
 
 extern uint16_t app_timer_count;
+extern wiced_bool_t	is_provisioned;
 
 
 

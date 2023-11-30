@@ -12,6 +12,8 @@
 #include "wiced_bt_mesh_app.h"
 #include "wiced_bt_mesh_model_utils.h"
 #include "wiced_bt_mesh_provision.h"
+//#include "malloc.h"
+//#include <stdio.h>
 #include "init_mesh.h"
 
 
@@ -22,15 +24,24 @@ void create_network(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
+	wiced_result_t result;						// Variable to save the result
+
+	// If the Mesh has been created or node is provisioned return the function
+    if(wiced_hal_read_nvram(EMBEDDED_PROV_NODE_ADDR_FIRST, sizeof(node), (uint8_t*)&node, &result) == sizeof(node))
+    {
+    	// Node provisioned
+    	WICED_BT_TRACE("Device are provisioned\r\n");
+    	return;
+    }
+
 	// Information of the Net and local device
 	//mesh_local_device_set_data_t set;			// Structure contains information of the provisioner application
     //mesh_node_t node;							// Structure contains information of the node
-    wiced_result_t result;						// Variable to save the result
 
     memset(&node, 0, sizeof(node));				// Clean the structure
 
-    node.addr = EMBEDDED_PROV_LOCAL_ADDR;		// Set the address provisioner application (Is the First Node)
-    node.last_addr = EMBEDDED_PROV_LOCAL_ADDR;
+    node.addr = EMBEDDED_PROV_LOCAL_ADDR;			// Set the address provisioner application (Is the First Node)
+    //node.last_addr = EMBEDDED_PROV_LOCAL_ADDR + 1;	// Set the last address provisioner application (Is the Next Node)
 
     // Create the Network Key
     *(uint8_t*)&node.fil_key_node[0] = wiced_hal_rand_gen_num();
@@ -72,6 +83,25 @@ void create_network(void)
 }
 
 
+
+//char* transmit_node_data(mesh_node_t node)
+//{
+//    char* mesh_string = (char*)malloc(10); // Big enough to hold "MESH1 Nxx"
+//
+//    if (mesh_string == NULL) {
+//        // Error Handling: Could not allocate memory
+//        return NULL;
+//    }
+//
+//    // Get the value for the number N
+//    uint8_t n_value = (uint8_t)(node.addr % 100);
+//
+//    // Format the string to your specifications
+//    sprintf(mesh_string, "LASEC N%02d", n_value);
+//
+//    // Returns the generated string
+//    return mesh_string;
+//}
 
 
 ///*

@@ -171,16 +171,21 @@ void beacon_init(void)
     // Re-broadcast low energy advertisements (commented out in the provided code).
     //!(is_provisioned)?(node_set_app_advertisement_data()):(gap_rebroadcastLR(1));
 
+    // Depending of node mode this going to advertisement a package of information
     if(wiced_hal_read_nvram(EMBEDDED_PROV_NODE_ADDR_FIRST, sizeof(node), (uint8_t*)&node, &result) != sizeof(node))
     {
+    	// Node unprovisioned
     	WICED_BT_TRACE("Node Adv--------\n\r");
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+    	is_provisioned = WICED_FALSE;
     	node_set_app_advertisement_data();
     }
     else
     {
+    	// Node provisioned ( Created Network )
     	WICED_BT_TRACE("Mesh Adv--------\n\r");
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+    	is_provisioned = WICED_TRUE;
     	mesh_set_app_advertisement_data();
     }
 
@@ -251,7 +256,12 @@ wiced_result_t beacon_management_callback(wiced_bt_management_evt_t event, wiced
     		// Perform initialization and configuration tasks here
     		beacon_init();				// Start the application configuration
     		config_Transceiver(); 		// Configura puerto uart
-    		start_observe(); 			// Arranca el escaner
+
+    		if(is_provisioned)
+    		{
+    			start_observe(); 			// Star the observer
+    		}
+
     		set_outPuts(); 				// Configura pines de salida
     		set_intPuts(); 				// Configura pines de entrada
     		register_pin_interrupt(); 	// Configura las interrupciones
@@ -426,8 +436,8 @@ void mesh_set_app_advertisement_data(void)
     num_elem++;
 
     adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len          = strlen((const char *)"MESH1 BLE");
-    adv_elem[num_elem].p_data       = (uint8_t*)"MESH1 BLE";
+    adv_elem[num_elem].len          = strlen((const char *)data_name_node);
+    adv_elem[num_elem].p_data       = (uint8_t*)data_name_node;
     num_elem++;
 
     wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
@@ -461,10 +471,10 @@ void node_set_app_advertisement_data(void)
     adv_elem[num_elem].p_data		= app_cfg_settings2.device_class;
     num_elem++;
 
-//    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
-//    adv_elem[num_elem].len          = sizeof(mesh_beacon);
-//    adv_elem[num_elem].p_data       = mesh_beacon;
-//    num_elem++;
+    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
+    adv_elem[num_elem].len          = sizeof(mesh_beacon);
+    adv_elem[num_elem].p_data       = mesh_beacon;
+    num_elem++;
 
     wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
 
@@ -854,8 +864,3 @@ void rx_cback(void *data)
         memset(Uart_BuffRX, '\0', 64);				// Clear the buffer after processing
     }
 }
-
-
-
-
-

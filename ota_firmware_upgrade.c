@@ -299,7 +299,7 @@ APPLICATION_START()
         WICED_BT_TRACE("--- Mode Application Bluetooth ---\r\n");
 
         // Turn On the Charge LED
-        wiced_hal_gpio_configure_pin(LED_CHARGE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+        //wiced_hal_gpio_configure_pin(LED_CHARGE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
 
         // Initialize the Generic Access Profile (GAP) stack for Bluetooth Low Energy communication.
         gap_stack_init();
@@ -491,7 +491,7 @@ void app_timeout(uint32_t count)
     WICED_BT_TRACE("timer count: %d\n", timer_count++);
 
     // Blinking LED of charge
-	(wiced_hal_gpio_get_pin_input_status(LED_CHARGE))?(wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_LOW)):(wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_HIGH));
+	//(wiced_hal_gpio_get_pin_input_status(LED_CHARGE))?(wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_LOW)):(wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_HIGH));
 
     // Check if 'timer_count' has reached a value grater than 120 seconds ( 2 Minutes )
     if( timer_count > 120 )

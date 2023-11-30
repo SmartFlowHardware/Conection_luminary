@@ -1,15 +1,15 @@
 Loading the ModusToolbox Technology Packs and Early Access Packs
 Finished loading the ModusToolbox Technology Packs and Early Access Packs (0 ms)
 Loading the tools information
-Finished loading the tools information (39 ms)
+Finished loading the tools information (36 ms)
 Using the executable path for the tools directory.
 Loading the application in directory 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh'
 using cached data from file 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/.mtbqueryapi'
 creating application information from 'get_app_info' data
 finished creating application information from 'get_app_info' data (23 ms)
-Finished loading the application data (53 ms total, 0 make)
+Finished loading the application data (56 ms total, 0 make)
 Loading asset repository references
-Finished loading the asset repository references (398 ms)
+Finished loading the asset repository references (514 ms)
 Loading the manifest data
 Loading super manfiest files from all sources
 Getting manifests from remote and/or local sources
@@ -81,14 +81,34 @@ Finished download of file 'https://github.com/CyberonEBU/cyberon-mtb-mw-manifest
 Finished download of file 'https://github.com/golioth/mtb-golioth-mw-manifest/raw/main/mtb-golioth-mw-manifest-fv2.xml'
 Finished download of file 'https://github.com/memfault/mtb-memfault-mw-manifest/raw/main/mtb-memfault-mw-manifest-fv2.xml'
 Finished download of file 'https://github.com/sensiml/sensiml-mw-manifest/raw/main/sensiml-mw-manifest-fv2.xml'
-Finished loading the manifest data (3981 ms)
+Finished loading the manifest data (3461 ms)
 Loading the device db
-Finished loading the device db (2126 ms)
+Finished loading the device db (8780 ms)
 the application environment had an empty 'MTB_CACHE_DIR', assuming default location
 the application environment had an empty 'MTB_OFFLINE_DIR', assuming default location
 the application environment had an empty 'MTB_GLOBAL_DIR', assuming default location
 Starting to refresh dependencies for project 'OTA_FirmwareUpgrade'.
-Requested to remove the asset '20819A1'.
+Requested to remove the asset '20719B2'.
+Requested to remove the asset 'btsdk-common'.
+Requested to remove the asset 'btsdk-include'.
+Requested to remove the asset 'btsdk-tools'.
+Requested to remove the asset 'btsdk-utils'.
+Requested to remove the asset 'core-make'.
+Requested to add the asset 'CYW20719B2'.
+Requested to add the asset 'BTSDK Shared Includes'.
+Requested to add the asset 'BTSDK Tools'.
+Requested to add the asset 'BTSDK Utilities'.
+Requested to add the asset 'BTSDK Shared Source'.
+Requested to add the asset 'core-make'.
+Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-413055-EVAL'.
+Found new indirect dependencies 'CYW20719B2, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
+Refreshed all dependencies for project 'OTA_FirmwareUpgrade'.
+0 error(s), 0 warning(s)
+Successfully acquired the information.
+Note: This application uses the ModusToolbox 2.x application structure and so incompatible 3.x content is not displayed. See KBA 236134 for instructions on modifying the application to be compatible with 3.x content.
+Requested to change the active target to 'CYBT-213043-MESH'.
+Starting to refresh dependencies for project 'OTA_FirmwareUpgrade'.
+Requested to remove the asset '20719B2'.
 Requested to remove the asset 'btsdk-common'.
 Requested to remove the asset 'btsdk-include'.
 Requested to remove the asset 'btsdk-tools'.
@@ -103,48 +123,28 @@ Requested to add the asset 'core-make'.
 Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-213043-MESH'.
 Found new indirect dependencies 'CYW20819A1, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
 Refreshed all dependencies for project 'OTA_FirmwareUpgrade'.
-0 error(s), 0 warning(s)
-Successfully acquired the information.
-Note: This application uses the ModusToolbox 2.x application structure and so incompatible 3.x content is not displayed. See KBA 236134 for instructions on modifying the application to be compatible with 3.x content.
-Requested to change the active target to 'CYBT-413055-EVAL'.
-Starting to refresh dependencies for project 'OTA_FirmwareUpgrade'.
-Requested to remove the asset '20819A1'.
-Requested to remove the asset 'btsdk-common'.
-Requested to remove the asset 'btsdk-include'.
-Requested to remove the asset 'btsdk-tools'.
-Requested to remove the asset 'btsdk-utils'.
-Requested to remove the asset 'core-make'.
-Requested to add the asset 'CYW20719B2'.
-Requested to add the asset 'BTSDK Shared Includes'.
-Requested to add the asset 'BTSDK Tools'.
-Requested to add the asset 'BTSDK Utilities'.
-Requested to add the asset 'BTSDK Shared Source'.
-Requested to add the asset 'core-make'.
-Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-413055-EVAL'.
-Found new indirect dependencies 'CYW20719B2, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
-Refreshed all dependencies for project 'OTA_FirmwareUpgrade'.
 
 Starting to refresh dependencies for project 'OTA_FirmwareUpgrade'.
-Requested to remove the asset '20819A1'.
+Requested to remove the asset '20719B2'.
 Requested to remove the asset 'btsdk-common'.
 Requested to remove the asset 'btsdk-include'.
 Requested to remove the asset 'btsdk-tools'.
 Requested to remove the asset 'btsdk-utils'.
 Requested to remove the asset 'core-make'.
-Requested to add the asset 'CYW20719B2'.
+Requested to add the asset 'CYW20819A1'.
 Requested to add the asset 'BTSDK Shared Includes'.
 Requested to add the asset 'BTSDK Tools'.
 Requested to add the asset 'BTSDK Utilities'.
 Requested to add the asset 'BTSDK Shared Source'.
 Requested to add the asset 'core-make'.
-Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-413055-EVAL'.
-Found new indirect dependencies 'CYW20719B2, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
+Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-213043-MESH'.
+Found new indirect dependencies 'CYW20819A1, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
 Refreshed all dependencies for project 'OTA_FirmwareUpgrade'.
 
 Changelog for project "OTA_Upgrade_Mesh":
-Active BSP changed to CYBT-413055-EVAL
-CYW20719B2 version release-v4.4.2 added
-20819A1 version release-v4.4.2 removed
+Active BSP changed to CYBT-213043-MESH
+CYW20819A1 version release-v4.4.2 added
+20719B2 version release-v4.4.2 removed
 
 Click "Update" to commit the changesUpdating application "OTA_Upgrade_Mesh" ...
 Starting to commit changes to the filesystem and project 'OTA_FirmwareUpgrade'.
@@ -162,9 +162,9 @@ Requested asset 'btsdk-include'.
 Requested asset 'btsdk-tools'.
 Requested asset 'btsdk-utils'.
 Requested asset 'core-make'.
-Requested asset 'CYW20719B2'.
-Removed the file 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/libs/20819A1.mtb'.
-Writing mtb file for asset 'CYW20719B2' to the folder 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/libs'.
+Requested asset 'CYW20819A1'.
+Removed the file 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/libs/20719B2.mtb'.
+Writing mtb file for asset 'CYW20819A1' to the folder 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/libs'.
 Starting to fetch assets for the project directory 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh'.
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
@@ -173,122 +173,121 @@ Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/bts
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 config remote.origin.fetch 'refs/heads/*:refs/heads/*'
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 fetch cypress --tags --force --quiet
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 fetch cypress --tags --force --quiet
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 fetch cypress --tags --force --quiet
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 fetch cypress --tags --force --quiet
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 fetch cypress --tags --force --quiet
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 fetch cypress --tags --force --quiet
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 fetch cypress --tags --force --quiet
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 checkout release-v4.4.0
+HEAD is now at 3be349d Upload btsdk-ble 4.4.0.65202 [1743]
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 checkout release-v4.4.0
+Finished processing btsdk-ble
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 checkout release-v4.2.0
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 checkout release-v3.3.0
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 checkout release-v4.2.0
+HEAD is now at 57f1f65 Upload TARGET_CYBT-213043-MESH 3.3.0.23146
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 checkout release-v3.3.0
+Finished processing TARGET_CYBT-213043-MESH
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 checkout release-v3.3.0
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 checkout release-v3.3.0
+HEAD is now at 76ea3bc Upload btsdk-ota 4.2.0.11524 [916]
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 checkout release-v4.2.0
+Finished processing btsdk-ota
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 checkout release-v3.3.0
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 checkout release-v4.4.1
 HEAD is now at 695ef4e Upload btsdk-mesh 4.2.0.11524 [916]
 M	COMPONENT_mesh_app_lib/mesh_app_hci.c
 M	COMPONENT_mesh_app_lib/mesh_application.c
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 checkout release-v3.3.0
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-mesh/release-v4.2.0 checkout release-v4.2.0
 Finished processing btsdk-mesh
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 checkout release-v3.3.0
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 checkout release-v3.3.0
-HEAD is now at 57f1f65 Upload TARGET_CYBT-213043-MESH 3.3.0.23146
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 checkout release-v4.2.0
-HEAD is now at e69a65a Upload btsdk-peer-apps-ble 3.3.0.23146
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0 checkout release-v3.3.0
-Finished processing TARGET_CYBT-213043-MESH
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 checkout release-v4.4.0
-HEAD is now at 9c267c4 Upload btsdk-peer-apps-ota 3.3.0.23146
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 checkout release-v3.3.0
-Finished processing btsdk-peer-apps-ble
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 checkout release-v4.2.1
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 checkout release-v3.3.0
-Finished processing btsdk-peer-apps-ota
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 checkout release-v3.3.0
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 checkout release-v3.3.0
-HEAD is now at 76ea3bc Upload btsdk-ota 4.2.0.11524 [916]
-HEAD is now at 3be349d Upload btsdk-ble 4.4.0.65202 [1743]
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ota/release-v4.2.0 checkout release-v4.2.0
-Finished processing btsdk-ota
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 checkout release-v4.2.1
 HEAD is now at 9614e60 Upload TARGET_CYBT-413055-EVAL 3.3.0.23146
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-ble/release-v4.4.0 checkout release-v4.4.0
-Finished processing btsdk-ble
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 checkout release-v4.4.2
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0 checkout release-v3.3.0
 Finished processing TARGET_CYBT-413055-EVAL
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 checkout release-v4.4.1
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 checkout release-v4.4.2
-HEAD is now at 832a6d9 Upload TARGET_CYW920819EVB-02 3.3.0.23146
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 checkout release-v3.3.0
-Finished processing TARGET_CYW920819EVB-02
 Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 checkout release-v3.3.0
 HEAD is now at 745aafa Upload btsdk-common 4.2.1.2932 [1100]
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/libraries/btsdk-common/release-v4.2.1 checkout release-v4.2.1
 Finished processing btsdk-common
-HEAD is now at ac09f93 Upload btsdk-host-peer-apps-mesh 4.2.1.2932 [1100]
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 checkout release-v1.9.1
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 fetch cypress --tags --force --quiet
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 checkout release-v4.4.2
+HEAD is now at e69a65a Upload btsdk-peer-apps-ble 3.3.0.23146
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ble/release-v3.3.0 checkout release-v3.3.0
+Finished processing btsdk-peer-apps-ble
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 checkout release-v4.2.1
 HEAD is now at 2289fe4 Upload btsdk-include 4.4.2.14114 [1880]
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 checkout release-v4.2.1
-Finished processing btsdk-host-peer-apps-mesh
+HEAD is now at 251ade9 Upload core-make 1.9.1.3159
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-include/release-v4.4.2 checkout release-v4.4.2
 Finished processing btsdk-include
-HEAD is now at a0b67b7 Upload btsdk-utils 4.4.1.33643 [1779]
+Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 checkout release-v3.3.0
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 checkout release-v1.9.1
+Finished processing core-make
 HEAD is now at 0943e94 Upload btsdk-tools 3.3.0.23146
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/btsdk-tools/release-v3.3.0 checkout release-v3.3.0
 Finished processing btsdk-tools
+HEAD is now at 832a6d9 Upload TARGET_CYW920819EVB-02 3.3.0.23146
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYW920819EVB-02/release-v3.3.0 checkout release-v3.3.0
+Finished processing TARGET_CYW920819EVB-02
+HEAD is now at 9c267c4 Upload btsdk-peer-apps-ota 3.3.0.23146
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-peer-apps-ota/release-v3.3.0 checkout release-v3.3.0
+Finished processing btsdk-peer-apps-ota
+HEAD is now at a0b67b7 Upload btsdk-utils 4.4.1.33643 [1779]
 Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-utils/release-v4.4.1 checkout release-v4.4.1
 Finished processing btsdk-utils
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 checkout release-v1.9.1
-HEAD is now at
- 251ade9 Upload core-make 1.9.1.3159
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/core-make/release-v1.9.1 checkout release-v1.9.1
-Finished processing core-make
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 fetch cypress --tags --force --quiet
-Starting: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 checkout release-v4.4.2
-HEAD is now at 1486e72 Upload 20719B2 4.4.2.14114 [1880]
-Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2 checkout release-v4.4.2
-Finished processing 20719B2
+HEAD is now at d610029 Upload 20819A1 4.4.2.14114 [1880]
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2 checkout release-v4.4.2
+Finished processing 20819A1
+HEAD is now at ac09f93 Upload btsdk-host-peer-apps-mesh 4.2.1.2932 [1100]
+Success: git -C C:/Users/Lasec/mtw/mtb_shared/wiced_btsdk/tools/btsdk-host-peer-apps-mesh/release-v4.2.1 checkout release-v4.2.1
+Finished processing btsdk-host-peer-apps-mesh
 Fetched all assets for the project directory 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh'.
 Writing the file 'C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/libs/app.mk'.
 Successfully committed changes to the project 'OTA_FirmwareUpgrade'.
@@ -301,22 +300,22 @@ Updating Launch Configurations ...
 Calling "make eclipse" ...
 Searching installed tools in progress...
 Searching installed tools complete
-CYBT-413055-EVAL.mk: ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0/CYBT-413055-EVAL.mk
-Log file= "C:/Users/Lasec/AppData/Local/Temp/device-configurator-cli/device-configurator-cli-20231129.152239.550-17200.log"
-Command line= "C:/Users/Lasec/ModusToolbox/tools_3.0/device-configurator/device-configurator-cli.exe --library ../mtb_shared/wiced_btsdk/dev-kit/baselib/20719B2/release-v4.4.2/COMPONENT_20719B2/devicesupport.xml --build ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0/COMPONENT_bsp_design_modus/design.modus --check-mcu=CYBT-413055-02 --check-coprocessors= --readonly --skip-build"
-C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/build/CYBT-413055-EVAL/Debug/OTA_FirmwareUpgrade.ld already present, use clean if it needs updating
+CYBT-213043-MESH.mk: ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0/CYBT-213043-MESH.mk
+Log file= "C:/Users/Lasec/AppData/Local/Temp/device-configurator-cli/device-configurator-cli-20231130.082431.027-14208.log"
+Command line= "C:/Users/Lasec/ModusToolbox/tools_3.0/device-configurator/device-configurator-cli.exe --library ../mtb_shared/wiced_btsdk/dev-kit/baselib/20819A1/release-v4.4.2/COMPONENT_20819A1/devicesupport.xml --build ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0/COMPONENT_bsp_design_modus/design.modus --check-mcu=CYBT-213043-02 --check-coprocessors= --readonly --skip-build"
+C:/Users/Lasec/mtw/OTA_Upgrade_Mesh/build/CYBT-213043-MESH/Debug/OTA_FirmwareUpgrade.ld already present, use clean if it needs updating
 Prebuild operations complete
 Commencing build operations...
-CYBT-413055-EVAL.mk: ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-413055-EVAL/release-v3.3.0/CYBT-413055-EVAL.mk
-Initializing build: OTA_FirmwareUpgrade Debug CYBT-413055-EVAL GCC_ARM
+CYBT-213043-MESH.mk: ../mtb_shared/wiced_btsdk/dev-kit/bsp/TARGET_CYBT-213043-MESH/release-v3.3.0/CYBT-213043-MESH.mk
+Initializing build: OTA_FirmwareUpgrade Debug CYBT-213043-MESH GCC_ARM
 Auto-discovery in progress...
 -> Found 55 .c file(s)
 -> Found 0 .S file(s)
 -> Found 0 .s file(s)
 -> Found 0 .cpp file(s)
 -> Found 2 .o file(s)
--> Found 45 .a file(s)
--> Found 178 .h file(s)
+-> Found 65 .a file(s)
+-> Found 167 .h file(s)
 -> Found 0 .hpp file(s)
 -> Found 0 resource file(s)
 Applying filters...
@@ -336,18 +335,18 @@ Generated Eclipse launch config files:  "OTA_Upgrade_Mesh Attach_JLink.launch" "
 "make eclipse" succeeded
 
 Starting to refresh dependencies for project 'OTA_FirmwareUpgrade'.
-Requested to remove the asset '20719B2'.
+Requested to remove the asset '20819A1'.
 Requested to remove the asset 'btsdk-common'.
 Requested to remove the asset 'btsdk-include'.
 Requested to remove the asset 'btsdk-tools'.
 Requested to remove the asset 'btsdk-utils'.
 Requested to remove the asset 'core-make'.
-Requested to add the asset 'CYW20719B2'.
+Requested to add the asset 'CYW20819A1'.
 Requested to add the asset 'BTSDK Shared Includes'.
 Requested to add the asset 'BTSDK Tools'.
 Requested to add the asset 'BTSDK Utilities'.
 Requested to add the asset 'BTSDK Shared Source'.
 Requested to add the asset 'core-make'.
-Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-413055-EVAL'.
-Found new indirect dependencies 'CYW20719B2, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
+Found direct dependencies 'btsdk-ble, btsdk-host-peer-apps-mesh, btsdk-mesh, btsdk-ota, btsdk-peer-apps-ble, btsdk-peer-apps-ota, TARGET_CYBT-213043-MESH'.
+Found new indirect dependencies 'CYW20819A1, BTSDK Shared Includes, BTSDK Tools, BTSDK Utilities, BTSDK Shared Source, core-make'.
 Refreshed all dependencies for project 'OTA_FirmwareUpgrade'.

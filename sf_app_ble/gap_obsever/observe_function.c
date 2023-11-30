@@ -130,7 +130,6 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     		start_tag_timer();
     	}
 
-
     	// The Node Device is Found
     	if( memcmp(filter_node, p_device_class, sizeof(filter_node)) == 0 )
     	{
