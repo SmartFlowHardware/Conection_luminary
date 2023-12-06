@@ -27,6 +27,7 @@ wiced_bool_t value_ac=WICED_TRUE;
 wiced_bool_t value_gap=WICED_TRUE;
 wiced_bool_t value_da=WICED_FALSE;
 
+wiced_bool_t	blinking_led_timer;
 
 /** Variable to indicate if the sensor was found by the scanner */
 //uint8_t				found_sensor;
@@ -84,6 +85,7 @@ extern void 		start_multi_bc3(void);
 extern void start_lamp_timer(void);
 extern void start_tag_timer(void);
 extern void start_node_timer(void);
+extern void start_bled_timer(void);
 
 //extern             void start_trOTA(uint32_t t_clk);
 

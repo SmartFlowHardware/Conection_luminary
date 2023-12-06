@@ -12,8 +12,10 @@
 #include "wiced_bt_mesh_app.h"
 #include "wiced_bt_mesh_model_utils.h"
 #include "wiced_bt_mesh_provision.h"
-//#include "malloc.h"
-//#include <stdio.h>
+#include "wiced_hal_wdog.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include "malloc.h"
 #include "init_mesh.h"
 
 
@@ -102,24 +104,44 @@ void mesh_app_factory_reset(void)
 }
 
 
-//char* transmit_node_data(mesh_node_t node)
-//{
-//    char* mesh_string = (char*)malloc(10); // Big enough to hold "MESH1 Nxx"
-//
-//    if (mesh_string == NULL) {
-//        // Error Handling: Could not allocate memory
-//        return NULL;
-//    }
-//
-//    // Get the value for the number N
-//    uint8_t n_value = (uint8_t)(node.addr % 100);
-//
-//    // Format the string to your specifications
-//    sprintf(mesh_string, "LASEC N%02d", n_value);
-//
-//    // Returns the generated string
-//    return mesh_string;
-//}
+uint8_t generate_random_number(void)
+{
+	uint8_t random_value; // Variable to generate the random value
+
+	// Loop to generate a Random Number that not be zero
+    do
+    {
+    	random_value = wiced_hal_rand_gen_num();
+    }while (random_value == 0);
+
+    return random_value;
+}
+
+
+
+char* transmit_node_data(mesh_node_t node, char* user_prefix)
+{
+    // Get the value for number N
+    uint8_t n_value = (node.addr % 100);
+
+    // Calculate the total length of the resulting string
+    // (prefix length + space + length of "Nxx")
+    size_t total_length = strlen(user_prefix) + 1 + 4;
+
+    // Allocates memory for the resulting string
+    char* result = (char*)malloc(total_length);
+
+    // Error Handling: Could not allocate memory
+    if (result == NULL)
+        return NULL;
+
+    // Format the string to your specifications
+    snprintf(result, total_length, "%s N%02d", user_prefix, n_value);
+
+    // Returns the generated string
+    return result;
+}
+
 
 
 ///*
@@ -199,6 +221,3 @@ void mesh_app_factory_reset(void)
 //    wiced_init_timer(&self_config_timer, self_configure_next_op, (TIMER_PARAM_TYPE)node_addr, WICED_MILLI_SECONDS_TIMER);
 //    self_configure_next_op((TIMER_PARAM_TYPE)node_addr);	// Call at the function for start the self configuration process
 //}
-
-
-

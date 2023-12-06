@@ -32,9 +32,9 @@ typedef struct
 typedef struct
 {
 //    uint8_t		uuid[16];
-    uint16_t 	addr;					/**< Local Node Address inside of the Network */
-    uint16_t	last_addr;				/**< Next Node Address inside of the Network */
-    uint16_t	max_dst;				/**< Destiny Node hops inside of the Network */
+    uint8_t 	addr;					/**< Local Node Address inside of the Network */
+    uint8_t		last_addr;				/**< Next Node Address inside of the Network */
+    uint8_t		max_dst;				/**< Destiny Node hops inside of the Network */
     uint8_t		fil_key_node[2];		/**< Local Device Key */
     uint8_t		net_key_node[2];		/**< Mesh Network Key */
 //    uint8_t  	num_elements;
@@ -55,8 +55,10 @@ typedef struct
 
 mesh_node_t node;
 
-void create_network(void);
-void mesh_app_factory_reset(void);
+void		create_network(void);
+void		mesh_app_factory_reset(void);
+uint8_t		generate_random_number(void);
+char*		transmit_node_data(mesh_node_t node, char* user_prefix);
 //char* transmit_node_data(mesh_node_t node);
 void self_configure(uint16_t node_addr);
 

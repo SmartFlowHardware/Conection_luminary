@@ -85,8 +85,10 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 	wiced_bool_t	ret_status;			// Variable to indicate if the scan found the device to generating the connection
 	uint8_t			*p_data_name;		// Pointer to data for searched information in the advertisement package
 	uint8_t			*p_device_class;	// Pointer to data fot searched information in the advertisement package
+	uint8_t			*p_mesh_beacon;
 	uint8_t			length_scan;		// Variable to store the length of the parameter being searched for the function in the advertisement
 	uint8_t			length_scan_node;	// Variable to store the length of the parameter being searched for the function in the advertisement
+	uint8_t			length_scan_beacon;
 
     if (p_scan_result == NULL )
         return;
@@ -97,9 +99,10 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     /* --- Filters --- */
     if( p_scan_result && p_scan_result->rssi > -48 )
     {
-    	/* Search for Name element/Device element in the Advertisement data received. */
+    	/* Search for Name element/Device class in the Advertisement data received. */
     	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
     	p_device_class = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_DEV_CLASS, &length_scan_node );
+    	p_mesh_beacon = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_MESH_BEACON, &length_scan_beacon );
 
     	// Find data
     	if ( p_data_name == NULL )
@@ -108,8 +111,14 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     		p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_NAME_SHORT, &length_scan );
         }
 
-//    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
-//    	WICED_BT_TRACE_ARRAY(p_adv_data, 19, "Advertisement Package: ");
+    	if( p_mesh_beacon )
+    	{
+    		WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
+    		WICED_BT_TRACE_ARRAY(p_mesh_beacon, length_scan_beacon, "Beacon Message: ");
+    	}
+
+    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
+    	WICED_BT_TRACE_ARRAY(p_adv_data, 21, "Advertisement Package: ");
 
     	/** Filters without connection */
     	// The Lamp Device is found
@@ -117,7 +126,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	{
     		//WICED_BT_TRACE("FIND LAMP RSSI:%d\r\n", p_scan_result->rssi);
     		find_lamp = WICED_TRUE;
-    		wiced_hal_gpio_configure_pin(LED_PERSON, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+    		wiced_hal_gpio_set_pin_output(LED_PERSON, GPIO_PIN_OUTPUT_HIGH);
     		start_lamp_timer();
     	}
 
@@ -126,20 +135,29 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	{
     		//WICED_BT_TRACE("FIND TAG RSSI:%d\r\n", p_scan_result->rssi);
     		find_tag = WICED_TRUE;
-    		wiced_hal_gpio_configure_pin(LED_VEHICLE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+    		wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_HIGH);
     		start_tag_timer();
     	}
 
 
     	/** Filters that required connection */
     	// The Node Device is Found
-    	if( !memcmp(filter_node_dev, p_device_class, sizeof(filter_node_dev)) )
+    	if( !memcmp(filter_node_dev, p_device_class, sizeof(filter_node_dev)) && p_scan_result->rssi > -42 )
     	{
-    		WICED_BT_TRACE("FIND NODE RSSI:%d\r\n", p_scan_result->rssi);
+    		//WICED_BT_TRACE("FIND NODE RSSI:%d\r\n", p_scan_result->rssi);
     		find_node = WICED_TRUE;
-    		wiced_hal_gpio_configure_pin(LED_WARNING, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
     		start_node_timer();
+
+    		// Start a timer to blinking the LED, one Time
+    		if( !blinking_led_timer )
+    		{
+    			start_bled_timer();
+    			blinking_led_timer = WICED_TRUE;
+    		}
+
     	}
+
+    	// Message to "connect" at Mesh
     }
     else
     {

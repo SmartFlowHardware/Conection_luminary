@@ -300,7 +300,7 @@ void f_timer_cback1( void ){
 void f_timer_lamp( TIMER_PARAM_TYPE arg )
 {
 	find_lamp = WICED_FALSE;
-	wiced_hal_gpio_configure_pin(LED_PERSON, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+	wiced_hal_gpio_set_pin_output(LED_PERSON, GPIO_PIN_OUTPUT_LOW);
 	WICED_BT_TRACE("Clear Lamp: %d\n", find_lamp);
 }
 
@@ -323,7 +323,7 @@ void f_timer_lamp( TIMER_PARAM_TYPE arg )
 void f_timer_tag( TIMER_PARAM_TYPE arg )
 {
 	find_tag = WICED_FALSE;
-	wiced_hal_gpio_configure_pin(LED_VEHICLE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+	wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_LOW);
 	WICED_BT_TRACE("Clear Tag: %d\n", find_tag);
 }
 
@@ -345,6 +345,52 @@ void f_timer_tag( TIMER_PARAM_TYPE arg )
 void f_timer_node( TIMER_PARAM_TYPE arg )
 {
 	find_node = WICED_FALSE;
-	wiced_hal_gpio_configure_pin(LED_WARNING, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+	blinking_led_timer = WICED_FALSE;
+
+	// Stop the timer that blinking the LED and keep the LED On
+	wiced_stop_timer(&bled_timer);
+	wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_LOW);
+
 	WICED_BT_TRACE("Clear Node: %d\n", find_node);
+}
+
+
+/************************************************************************************************************************************
+ * Function Name: f_app_main( TIMER_PARAM_TYPE arg )
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	The function is responsible for initiating and checkout some processes for the correct handle of the variables that indicate if the
+ * 	Lamp or Tag are saw.
+ *
+ *
+ * Parameters:
+ * 	TIMER_PARAM_TYPE arg	:
+ *
+ * Return:
+ *  void
+ ***********************************************************************************************************************************/
+void f_timer_bled( TIMER_PARAM_TYPE arg )
+{
+	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+
+	// Variables to set the values
+	static uint8_t		counter_timer_led;
+
+	// Check if counter is minor at limit
+	if( counter_timer_led <= TIMES_BLINKING_LED )
+	{
+		// Blinking the Led and increment the value of the counter
+		wiced_hal_gpio_set_pin_output(LED_CHARGE, !wiced_hal_gpio_get_pin_output(LED_CHARGE));
+		counter_timer_led++;
+	}
+	else if( counter_timer_led > TIMES_BLINKING_LED )
+	{
+		// Kepp the LED On
+		wiced_hal_gpio_set_pin_output(LED_CHARGE, GPIO_PIN_OUTPUT_LOW);
+		counter_timer_led++;
+
+		// When pass one second reset the value to going blinking the LED
+		if(counter_timer_led == 8)
+			counter_timer_led = 0;
+	}
 }

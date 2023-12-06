@@ -47,7 +47,9 @@ char data_txsf[16];	// Original uint8_t data_txsf[16];
 
 char* data_name_node;
 
-uint8_t mesh_beacon[]={'H','E','L','L','O','\n'};
+uint8_t mesh_beacon[]={'M', 'E', 'S', 'S', 'A', 'G', 'E', '\n'};
+
+uint8_t mesh_message[]={'H','E','L','L','O','\n'};;
 
 
 /************************************************************************************************************************************
@@ -114,6 +116,8 @@ static void                     beacon_set_app_advertisement_data2();
 void                            beacon_set_app_advertisement_data3(void);
 void                            node_set_app_advertisement_data(void);
 void							mesh_set_app_advertisement_data(void);
+void							app_set_scan_response_data(void);
+
 void                            stop_rbdkst(void);
 
 void                            gap_rebroadcastLR(int8_t slt);
@@ -156,7 +160,7 @@ extern void 					separate_array_into_two( uint8_t *p_url_beacon, char *p_array_t
 extern wiced_bt_gatt_status_t 	beacon_gatt_callback( wiced_bt_gatt_evt_t event, wiced_bt_gatt_event_data_t *p_event_data );
 
 
-
+extern char*					transmit_node_data(mesh_node_t node, char* user_prefix);
 
 
 #endif /* SF_APP_BLE_STACK_CORE_GAP_GAP_LAYER_APP_H_ */

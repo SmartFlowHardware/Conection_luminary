@@ -30,8 +30,6 @@ extern wiced_bool_t	is_provisioned;
  *  Function Declarations
  ***********************************************************************************************************************************/
 
-void			button_cback_26( void *data, uint8_t port_pin );
-void			button_cback_4( void *data, uint8_t port_pin );
 void			button_cback_0( void *data, uint8_t port_pin );
 
 void			button_cback_acuse( void *data, uint8_t port_pin );

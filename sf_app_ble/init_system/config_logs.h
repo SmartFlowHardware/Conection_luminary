@@ -102,6 +102,9 @@ extern uint16_t				numbytes6;
 extern wiced_result_t		status11;
 extern uint16_t				numbytes11;
 
+wiced_result_t  status20;
+uint16_t        numbytes20;
+
 extern unsigned char		data_bn_save[10];
 extern unsigned char		data_ma_save[6];
 
@@ -114,6 +117,7 @@ extern unsigned char		data_ma_save[6];
 void						init_config_logs(void);
 void						init_mac_logs(void);
 
+extern uint8_t generate_random_number(void);
 
 
 #endif /* SF_APP_BLE_INIT_SYSTEM_CONFIG_LOGS_H_ */

@@ -47,7 +47,19 @@
 #include "config_timers.h"
 
 
+/************************************************************************************************************************************
+ *  												Function Definitions
+ ***********************************************************************************************************************************/
 
+/************************************************************************************************************************************
+ * Function Name: config_clk_timers(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Configures various timers for the application.
+ *
+ * 	This function initializes several timers using the WICED SDK's timer API.
+ * 	Timers are configured for periodic and millisecond-based intervals to handle different tasks in the application.
+ ***********************************************************************************************************************************/
 void config_clk_timers(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
@@ -69,8 +81,16 @@ void config_clk_timers(void)
 	wiced_init_timer( &lamp_timer, f_timer_lamp, 0, WICED_SECONDS_TIMER);
 	wiced_init_timer( &tag_timer, f_timer_tag, 0, WICED_SECONDS_TIMER);
 	wiced_init_timer( &node_timer, f_timer_node, 0, WICED_SECONDS_TIMER);
+	wiced_init_timer( &bled_timer, f_timer_bled, 0, WICED_MILLI_SECONDS_PERIODIC_TIMER);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_BTimers(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timers with predefined intervals. This function starts two timers using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_BTimers(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
@@ -81,22 +101,49 @@ void start_BTimers(void)
 }
 
 
+/************************************************************************************************************************************
+ * Function Name: start_TOnline(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timers with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_TOnline(void)
 {
 	 wiced_start_timer( &timer_Online, clock_Online);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_TOnline_long(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timers with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_TOnline_long(void)
 {
 	wiced_start_timer( &timer_st_Online, clock_st_Online);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: stop_TOnline(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Stop a specific timer with predefined. This function stops a timer and starts other using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void stop_TOnline(void)
 {
 	wiced_stop_timer(&timer_Online);
 	wiced_start_timer( &timer_Online, clock_Online_long);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: prevention_inspection(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void prevention_inspection(void)
 {
 	  /* if (wiced_init_timer(&timer_inspection, f_timer_inspection, 0, WICED_SECONDS_TIMER) == WICED_SUCCESS)
@@ -108,57 +155,125 @@ void prevention_inspection(void)
 	   wiced_start_timer( &timer_inspection, clock_inspection);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: stop_timer_st_online(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Stop a specific timer with predefined. This function stops a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void stop_timer_st_online(void)
 {
 	wiced_stop_timer( &timer_st_Online);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_Treturn(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_Treturn(void)
 {
 	wiced_start_timer( &timer_return, clock_return5);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_Tsm(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_Tsm(void)
 {
 	wiced_start_timer( &timer_sm, 600);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_TOsm(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_TOsm(void)
 {
 	wiced_start_timer( &timer_Online, 500);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_trOTA(uint32_t t_clk)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_trOTA(uint32_t t_clk)
 {
 	wiced_start_timer( &timer_rOTA, t_clk);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_trOTA(uint32_t t_clk)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Stops specific timer with predefined intervals. This function stops a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_trOTA_stop(void)
 {
 	wiced_stop_timer( &timer_rOTA);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_TSPI(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_TSPI(void)
 {
 	wiced_start_timer( &timer_SPI, 3600);
 }
 
 
+/************************************************************************************************************************************
+ * Function Name: clear_da(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void clear_da(void)
 {
 	wiced_start_timer( &timer_da, 10);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: clr_spi(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Stops specific timer with predefined intervals. This function stops a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void clr_spi(void)
 {
 	wiced_start_timer( &timer_clrspi, 2800);
 }
 
+
+/************************************************************************************************************************************
+ * Function Name: start_cbck1(void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	Starts specific timer with predefined intervals. This function starts a timer using the WICED SDK's timer API.
+ ***********************************************************************************************************************************/
 void start_cbck1(void)
 {
 	wiced_start_timer( &timer_cback1, 250 );
 }
-
 
 
 /************************************************************************************************************************************
@@ -214,6 +329,20 @@ void start_node_timer(void)
 	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
 	wiced_start_timer(&node_timer, TIMEOUT_IN_SECONDS);
+}
+
+
+/************************************************************************************************************************************
+ * Function Name: (void)
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	The "start_TOnline(void)" function is designed to start the select timers.
+ ***********************************************************************************************************************************/
+void start_bled_timer(void)
+{
+	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+
+	wiced_start_timer(&bled_timer, 500);
 }
 
 

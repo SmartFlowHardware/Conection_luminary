@@ -179,14 +179,17 @@ void beacon_init(void)
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
     	is_provisioned = WICED_FALSE;
     	node_set_app_advertisement_data();
+    	app_set_scan_response_data();
     }
     else
     {
     	// Node provisioned ( Created Network )
     	WICED_BT_TRACE("Mesh Adv--------\n\r");
+    	//data_name_node = transmit_node_data(node, "NELAS");
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
     	is_provisioned = WICED_TRUE;
     	mesh_set_app_advertisement_data();
+    	app_set_scan_response_data();
     }
 
     // Log message to indicate that UUID is cleared.
@@ -256,11 +259,11 @@ wiced_result_t beacon_management_callback(wiced_bt_management_evt_t event, wiced
     		// Perform initialization and configuration tasks here
     		beacon_init();				// Start the application configuration
     		config_Transceiver(); 		// Configura puerto uart
-
-    		if(is_provisioned)
-    		{
-    			start_observe(); 			// Star the observer
-    		}
+    		start_observe();
+//    		if(is_provisioned)
+//    		{
+//    			start_observe(); 			// Star the observer
+//    		}
 
     		set_outPuts(); 				// Configura pines de salida
     		set_intPuts(); 				// Configura pines de entrada
@@ -490,6 +493,28 @@ void node_set_app_advertisement_data(void)
 
     result =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
     WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", result);
+}
+
+
+
+/*******************************************************************************
+* Function Name: void app_set_scan_response_data( void )
+********************************************************************************/
+void app_set_scan_response_data( void )
+{
+	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+
+    wiced_bt_ble_advert_elem_t adv_elem[1] = { 0 };
+    uint8_t num_elem = 0;
+
+    /* Advertisement Element for Service UUID */
+    adv_elem[num_elem].advert_type = BTM_BLE_ADVERT_TYPE_MESH_MSG;
+    adv_elem[num_elem].len = sizeof(mesh_message);
+    adv_elem[num_elem].p_data = mesh_message;
+    num_elem++;
+
+    /* Set Raw Advertisement Data */
+    wiced_bt_ble_set_raw_scan_response_data( num_elem, adv_elem );
 }
 
 

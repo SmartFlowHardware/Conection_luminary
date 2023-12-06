@@ -285,16 +285,40 @@ void init_mac_logs(void)
 
 	// If none of the previous conditions are true, enter this block (Mac Address Null)
 	else
-	{
-		// Set a default Mac Address in 'bda' array
-		WICED_BT_TRACE("Mac Address Null\n");
-		bda[0]=0x11;
-		bda[1]=0x10;
-		bda[2]=0x10;
-		bda[3]=0x10;
-		bda[4]=0x10;
-		bda[5]=0x10;
-	}
+    {
+      WICED_BT_TRACE("Mac Address Null\n");
+
+      if( wiced_hal_read_nvram( WICED_NVRAM_VSID_START+20, sizeof(data_ma_save), &data_ma_save[0], &status20 ) == sizeof( data_ma_save ))
+      {
+    	  bda[0] = data_ma_save[0];
+    	  bda[1] = data_ma_save[1];
+    	  bda[2] = data_ma_save[2];
+    	  bda[3] = data_ma_save[3];
+    	  bda[4] = data_ma_save[4];
+    	  bda[5] = data_ma_save[5];
+    	  WICED_BT_TRACE_ARRAY( bda, sizeof(bda), "MAC ADDRESS: " );
+      }
+      else
+      {
+	      bda[0] = 0xBE;
+	      bda[1] = 0x24;
+	      bda[2] = 0x01;
+	      bda[3] = generate_random_number();
+	      bda[4] = generate_random_number();
+	      bda[5] = generate_random_number();
+
+	      memcpy(data_ma_save, bda, 16);
+	      numbytes20 = wiced_hal_write_nvram( WICED_NVRAM_VSID_START + 20, sizeof(data_ma_save), &data_ma_save[0], &status20 );
+
+//	      numbytes21 = wiced_hal_read_nvram( WICED_NVRAM_VSID_START+21, sizeof(reset_mac), &reset_mac, &status21 );
+//	      reset_mac = 0;
+//	      WICED_BT_TRACE("reset mac: %d\r\n", reset_mac);
+//	      numbytes21 = wiced_hal_write_nvram( WICED_NVRAM_VSID_START + 21, sizeof(reset_mac), &reset_mac, &status21 );
+
+	      WICED_BT_TRACE_ARRAY( bda, sizeof(bda), "MAC ADDRESS: " );
+      }
+
+    }
 
 	// Set the local Bluetooth device address using the 'bda' array
 	wiced_bt_ble_address_type_t macc = BLE_ADDR_PUBLIC_ID;

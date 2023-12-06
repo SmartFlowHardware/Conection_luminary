@@ -9,13 +9,19 @@
 #define SF_APP_BLE_INIT_SYSTEM_CONFIG_TIMERS_H_
 
 
-#define clock_Online 		1000
-#define clock_st_Online 	8000
-#define clock_Online_long 	10000
-#define clock_inspection   	20
-#define clock_return5      	5
+/************************************************************************************************************************************
+ *  Type  Definitions
+ ***********************************************************************************************************************************/
+
+#define clock_Online 			1000
+#define clock_st_Online 		8000
+#define clock_Online_long 		10000
+#define clock_inspection   		20
+#define clock_return5      		5
 #define APP_TIMEOUT_IN_SECONDS	1
 #define TIMEOUT_IN_SECONDS		5
+
+
 
 /************************************************************************************************************************************
  *  Global/Static Variables Definitions
@@ -33,6 +39,9 @@ wiced_timer_t	tag_timer;
 /** Declare variable to start the Tag Timer */
 wiced_timer_t	node_timer;
 
+/** Declare variable to start blinking led Timer */
+wiced_timer_t	bled_timer;
+
 wiced_timer_t timer_Online;
 wiced_timer_t timer_st_Online;
 wiced_timer_t timer_inspection;
@@ -44,6 +53,8 @@ wiced_timer_t timer_da;
 wiced_timer_t timer_clrspi;
 
 wiced_timer_t timer_cback1;
+
+
 
 /************************************************************************************************************************************
  *  Function Declarations
@@ -70,31 +81,29 @@ void			stop_timers(void);
 
 void start_trOTA(uint32_t t_clk);
 
-extern void      f_timer_Online( uint32_t data );
-extern void      f_timer_st_Online( uint32_t data );
-extern void      f_timer_inspection( uint32_t data );
-extern void      f_timer_return( uint32_t data );
-extern void      f_timer_sm( uint32_t data );
-extern void      f_timer_rOTA( uint32_t data );
-extern void      f_timer_SPI( void);
-extern void      f_timer_da( void);
-extern void      f_timer_clrspi( void);
 
-
-/**************************************************************************
- * Function Name: f_timer_cback1( void )
- **************************************************************************/
-extern void	  	f_timer_cback1( void );
 
 /************************************************************************************************************************************
- *  Imported Function
+ *	Imported Function Declarations
  ***********************************************************************************************************************************/
 
-extern void 	f_app_main( TIMER_PARAM_TYPE arg );
+extern void		f_timer_Online( uint32_t data );
+extern void		f_timer_st_Online( uint32_t data );
+extern void		f_timer_inspection( uint32_t data );
+extern void		f_timer_return( uint32_t data );
+extern void		f_timer_sm( uint32_t data );
+extern void		f_timer_rOTA( uint32_t data );
+extern void		f_timer_SPI( void);
+extern void		f_timer_da( void);
+extern void		f_timer_clrspi( void);
+
+extern void		f_timer_cback1( void );
+
+extern void		f_app_main( TIMER_PARAM_TYPE arg );
 extern void 	f_timer_lamp( TIMER_PARAM_TYPE arg );
 extern void 	f_timer_tag( TIMER_PARAM_TYPE arg );
 extern void 	f_timer_node( TIMER_PARAM_TYPE arg );
-
+extern void		f_timer_bled( TIMER_PARAM_TYPE arg );
 
 
 #endif /* SF_APP_BLE_INIT_SYSTEM_CONFIG_TIMERS_H_ */

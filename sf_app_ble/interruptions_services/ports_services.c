@@ -20,7 +20,6 @@
 
 #include "wiced_bt_dev.h"
 #include "sparcommon.h"
-
 #include "wiced_bt_mesh_models.h"
 
 #include "wiced_platform.h"
@@ -40,6 +39,10 @@
 
 
 /************************************************************************************************************************************
+ *  												Function Definitions
+ ***********************************************************************************************************************************/
+
+/************************************************************************************************************************************
  * Function Name: button_control_init(void)
  * ----------------------------------------------------------------------------------------------------------------------------------
  * Summary:
@@ -51,47 +54,11 @@ void button_control_init(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-	button_previous_value_acuse = wiced_hal_gpio_get_pin_input_status( PORT_INT_ACUSE );
-	button_previous_value_onoff = wiced_hal_gpio_get_pin_input_status( PORT_INT_ON_OFF );
+	button_previous_value_acuse = wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE);
+	button_previous_value_onoff = wiced_hal_gpio_get_pin_input_status(PORT_INT_ON_OFF);
 
 	WICED_BT_TRACE("Button Previous Value Acuse:%d\r\n", button_previous_value_acuse);
 	WICED_BT_TRACE("Button Previous Value OnOff:%d\r\n", button_previous_value_onoff);
-}
-
-
-
-void button_cback_26( void *data, uint8_t port_pin )
-{
-//	if( GPIO_PIN_OUTPUT_HIGH == wiced_hal_gpio_get_pin_output(LED_GPIO_6 ) )
-//	{
-//		 //wiced_hal_gpio_set_pin_output( LED_GPIO_6, GPIO_PIN_OUTPUT_LOW);
-//		 WICED_BT_TRACE( "Interrup1 LOW\n\r" );
-//
-//	}
-//	else
-//	{
-//		 //wiced_hal_gpio_set_pin_output( LED_GPIO_6, GPIO_PIN_OUTPUT_HIGH);
-//		 WICED_BT_TRACE( "Interrup1 HIGH\n\r" );
-//	}
-}
-
-void button_cback_4( void *data, uint8_t port_pin )
-{
-	/*if( GPIO_PIN_OUTPUT_HIGH == wiced_hal_gpio_get_pin_output(LED_GPIO_13 ) )
-	{
-		 //wiced_hal_gpio_set_pin_output( LED_GPIO_13, GPIO_PIN_OUTPUT_LOW);
-		 WICED_BT_TRACE( "Interrup2 LOW\n\r" );
-
-	}
-	else
-	{
-		 //wiced_hal_gpio_set_pin_output( LED_GPIO_13, GPIO_PIN_OUTPUT_HIGH);
-		 WICED_BT_TRACE( "Interrup2 HIGH\n\r" );
-	}*/
-
-	WICED_BT_TRACE( "Interrup2 HIGH\n\r" );
-
-	init_event_gap();// evento confirmacion de abordamiento
 }
 
 
@@ -225,6 +192,22 @@ void button_cback_on_off( void *data, uint8_t port_pin )
 //		WICED_BT_TRACE("Button pressed\r\n");
 //		//button_pushed_time = app_timer_count;
 //
-//		(wiced_hal_gpio_get_pin_input_status(LED_VEHICLE))?(wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_LOW)):(wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_HIGH));
 //	}
+}
+
+
+/************************************************************************************************************************************
+ * Function Name: void button_cback_1( void *data, uint8_t port_pin )
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ * Summary:
+ * 	This function going to detect if the user press the button in PORT 0 if the button is pressed the function going start an interrupt
+ * 	timer. This function register if the user press the button, for a time to change the mode.
+ *
+ * 	Parameters:
+ * 		*data:			Pointer to user data (optional)
+ * 		port_pin:		Number of the pin that generated the interrupt
+ ***********************************************************************************************************************************/
+void blinking_led( uint8_t pin_led )
+{
+
 }

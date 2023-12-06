@@ -8,6 +8,9 @@
 #ifndef SF_APP_BLE_PROCESSES_BLE_PROCESSES_TIMERS_H_
 #define SF_APP_BLE_PROCESSES_BLE_PROCESSES_TIMERS_H_
 
+
+#define TIMES_BLINKING_LED	5
+
 /************************************************************************************************************************************
  *  Static/Global Variables Declarations
  ***********************************************************************************************************************************/
@@ -37,6 +40,11 @@ extern uint8_t find_tag;
 /** Variable extern that indicate if found a Tag */
 extern uint8_t find_node;
 
+/** Declare variable to start blinking led Timer */
+extern wiced_timer_t	bled_timer;
+
+extern wiced_bool_t		blinking_led_timer;
+
 
 /************************************************************************************************************************************
  *  Imported Function Declarations
@@ -55,6 +63,8 @@ extern void 			stop_rbdkst(void);
 extern void				start_lamp_timer(void);
 extern void				start_tag_timer(void);
 extern void				start_node_timer(void);
+extern void				start_bled_timer(void);
+
 
 /************************************************************************************************************************************
  *  Function Declarations
@@ -73,5 +83,6 @@ void					f_app_main( TIMER_PARAM_TYPE arg );
 void					f_timer_lamp( TIMER_PARAM_TYPE arg );
 void					f_timer_tag( TIMER_PARAM_TYPE arg );
 void					f_timer_node( TIMER_PARAM_TYPE arg );
+void					f_timer_bled( TIMER_PARAM_TYPE arg );
 
 #endif /* SF_APP_BLE_PROCESSES_BLE_PROCESSES_TIMERS_H_ */
