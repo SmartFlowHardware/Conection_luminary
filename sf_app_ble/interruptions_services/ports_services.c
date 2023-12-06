@@ -75,7 +75,7 @@ void button_control_init(void)
  ***********************************************************************************************************************************/
 void button_cback_0( void *data, uint8_t port_pin )
 {
-	static uint16_t button_pushed_time = 0;
+//	static uint16_t button_pushed_time = 0;
 //	static uint32_t last_button_event_time_ms = 0;
 //	uint32_t current_time_ms = app_timer_count * 1000; 	// Convert to milliseconds
 //	uint32_t debounce_time_ms = 50; 					// Debounce time in milliseconds
@@ -131,43 +131,64 @@ void button_cback_0( void *data, uint8_t port_pin )
  ***********************************************************************************************************************************/
 void button_cback_acuse( void *data, uint8_t port_pin )
 {
-	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+	uint32_t current_time_acuse = app_timer_count * 500; 	// Convert to milliseconds
 
-    uint32_t value_acuse = wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE);
-    //uint32_t current_time_acuse = wiced_bt_mesh_core_get_tick_count();
-    uint32_t button_pushed_duration_acuse;
+	// Check if enough time has passed since the last event or the button was pressed one time
+	if ( ( (current_time_acuse - lst_btn_evt_time_acuse) < debounce_time_ms ) )
+	{
+		// Ignore button event due to debounce or to multi press
+		return;
+	}
 
-//    if(value_acuse == button_previous_value_acuse)
-//    {
-//        WICED_BT_TRACE("interrupt_handler: duplicate pin:%d value:%d current_time:%d\n", port_pin, value_acuse, current_time_acuse);
-//        return;
-//    }
+	WICED_BT_TRACE("[%s], app timer : %d\n", __FUNCTION__, app_timer_count );
 
-//    button_previous_value_acuse = value_acuse;
+	// Check if button is pressed
+	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ACUSE ) == GPIO_PIN_OUTPUT_HIGH )
+	{
+		WICED_BT_TRACE( "Button pressed\r\n" );
 
-	// If the Mesh has been created or node is provisioned return the function
-    if(is_provisioned)
-    {
-    	// Node provisioned
-    	WICED_BT_TRACE("Device are provisioned\r\n");
-    	return;
-    }
+        btn_push_tm_acuse = app_timer_count;
+        WICED_BT_TRACE( "btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
+	}
+	// Check if the button was released
+	else if ( btn_push_tm_acuse != 0 )
+	{
+		WICED_BT_TRACE( "btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
+		WICED_BT_TRACE( "app_timer_count: %d\r\n", app_timer_count );
 
-    WICED_BT_TRACE("STATE OF BUTTON:%d\r\n", wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE));
-    // Check if the button is pressed
-    if(wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE) == GPIO_PIN_OUTPUT_HIGH)
-    {
-        WICED_BT_TRACE("interrupt_handler: button pressed pin:%d value:%d current_time:%d\n", port_pin, value_acuse);// current_time_acuse);
+    	// Check that time was pressed the button ( if is higher TIME_PUSH_BUTTON_MIN ) change configuration
+    	if( (app_timer_count - btn_push_tm_acuse) > TIME_PUSH_BUTTON_MIN )
+    	{
+    		WICED_BT_TRACE( "Button released After more than 2s, Change configuration\r\n" );
 
-        // Create the Network
-        create_network();
+    		// If the Mesh has been created or node is provisioned return the function
+    		if(is_provisioned)
+    		{
+    			// Node provisioned
+    			WICED_BT_TRACE("Device are provisioned\r\n");
+    			//return;
+    		}
+    		else
+    		{
+    			// Create the Network
+    			create_network();
+    			//return;
+    		}
 
-        //button_pushed_time = current_time_acuse;
+    	}
+    	else if( ( ( app_timer_count - btn_push_tm_acuse ) <= TIME_PUSH_BUTTON_MIN ) )
+    	{
+    		// Turn On the LED
 
-        // if button is not released within 500ms, we will start sending move events
-        //wiced_start_timer(&button_timer, 500);
-        return;
-    }
+            WICED_BT_TRACE( "Button released Before less than 2s, Start Timer\r\n");
+
+            // Blinking the Led and increment the value of the counter
+            wiced_hal_gpio_set_pin_output(LED_PERSON, !wiced_hal_gpio_get_pin_output(LED_PERSON));
+    	}
+
+    	btn_push_tm_acuse = 0; 						// Reset the time of button after process the event
+    	lst_btn_evt_time_acuse = current_time_acuse;
+	}
 }
 
 
@@ -184,15 +205,65 @@ void button_cback_acuse( void *data, uint8_t port_pin )
  ***********************************************************************************************************************************/
 void button_cback_on_off( void *data, uint8_t port_pin )
 {
-	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+	uint32_t current_time_onoff = app_timer_count * 500; 	// Convert to milliseconds
 
-	// Check if the button is pressed
-//	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ON_OFF ) == GPIO_PIN_OUTPUT_LOW )
-//	{
-//		WICED_BT_TRACE("Button pressed\r\n");
-//		//button_pushed_time = app_timer_count;
-//
-//	}
+
+	// Check if enough time has passed since the last event or the button was pressed one time
+	if ( ( (current_time_onoff - lst_btn_evt_time_onoff) < debounce_time_ms ) )
+	{
+		// Ignore button event due to debounce or to multi press
+		return;
+	}
+
+	WICED_BT_TRACE("[%s], app timer : %d\n", __FUNCTION__, app_timer_count );
+
+	// Check if button is pressed
+	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ON_OFF ) == GPIO_PIN_OUTPUT_HIGH )
+	{
+		WICED_BT_TRACE( "Button pressed\r\n" );
+
+        btn_push_tm_onoff = app_timer_count;
+        WICED_BT_TRACE( "btn_push_tm_onoff: %d\r\n", btn_push_tm_onoff );
+	}
+	// Check if the button was released
+	else if ( btn_push_tm_onoff != 0 )
+	{
+		WICED_BT_TRACE( "btn_push_tm_onoff: %d\r\n", btn_push_tm_onoff );
+		WICED_BT_TRACE( "app_timer_count: %d\r\n", app_timer_count );
+
+    	// Check that time was pressed the button ( if is higher TIME_PUSH_BUTTON_MIN ) change configuration
+    	if( (app_timer_count - btn_push_tm_onoff) > TIME_PUSH_BUTTON_MIN )
+    	{
+    		WICED_BT_TRACE( "Button released After more than 2s, Change configuration\r\n" );
+
+    		// If the Mesh has been created or node is provisioned return the function
+    		if(is_provisioned)
+    		{
+    			// Delete information about the Mesh
+    			mesh_app_factory_reset();
+    			//return;
+    		}
+    		else
+    		{
+    			// Nothing to delete
+    			WICED_BT_TRACE("There is not a Network\r\n");
+    			//return;
+    		}
+
+    	}
+    	else if( ( ( app_timer_count - btn_push_tm_onoff ) <= TIME_PUSH_BUTTON_MIN ) )
+    	{
+    		// Turn On the LED
+
+            WICED_BT_TRACE( "Button released Before less than 2s, Start Timer\r\n");
+
+            // Blinking the Led and increment the value of the counter
+            wiced_hal_gpio_set_pin_output(LED_VEHICLE, !wiced_hal_gpio_get_pin_output(LED_VEHICLE));
+    	}
+
+    	btn_push_tm_onoff = 0; 						// Reset the time of button after process the event
+    	lst_btn_evt_time_onoff = current_time_onoff;
+	}
 }
 
 
@@ -209,5 +280,88 @@ void button_cback_on_off( void *data, uint8_t port_pin )
  ***********************************************************************************************************************************/
 void blinking_led( uint8_t pin_led )
 {
+	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
+	// Variables to set the values
+	static uint8_t		counter_timer_led;
+
+	// Check if counter is minor at limit
+	if( counter_timer_led <= TIMES_BLINKING_LED )
+	{
+		// Blinking the Led and increment the value of the counter
+		wiced_hal_gpio_set_pin_output(pin_led, !wiced_hal_gpio_get_pin_output(pin_led));
+		counter_timer_led++;
+	}
+	else if( counter_timer_led > TIMES_BLINKING_LED )
+	{
+		// Kepp the LED On
+		wiced_hal_gpio_set_pin_output(pin_led, GPIO_PIN_OUTPUT_LOW);
+		counter_timer_led++;
+
+		// When pass one second reset the value to going blinking the LED
+		if(counter_timer_led == 8)
+			counter_timer_led = 0;
+	}
 }
+
+
+// Check if the button is pressed
+//	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ON_OFF ) == GPIO_PIN_OUTPUT_LOW )
+//	{
+//		WICED_BT_TRACE("Button pressed\r\n");
+//		//button_pushed_time = app_timer_count;
+//
+//	}
+
+
+//    //uint32_t value_acuse = wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE);
+//	static uint32_t last_button_event_time_ms = 0;
+//    uint32_t current_time_acuse = app_timer_count * 500; 	// Convert to milliseconds
+//    uint32_t debounce_time_acuse = 100;						// Debounce time in milliseconds
+//    uint16_t button_pushed_acuse;
+//
+//	// Check if enough time has passed since the last event or the button was pressed one time
+//	if ( (current_time_acuse - last_button_event_time_ms) < debounce_time_acuse  )
+//	{
+//		// Ignore button event due to debounce
+//		return;
+//	}
+//
+//    WICED_BT_TRACE("STATE OF BUTTON:%d\r\n", wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE));
+//
+//    // Check if the button is pressed
+//    if(wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE) == GPIO_PIN_OUTPUT_HIGH)
+//    {
+//    	// Save the "time" when the button is pushed and start to counter
+//    	button_pushed_acuse = app_timer_button;
+//    	acuse_pressed = WICED_TRUE;
+//    }
+//    // Check when the button is released
+//    else if( (app_timer_button - button_pushed_acuse) >= 6 ) // Hold pushed for 3 Seconds
+//    {
+//    	acuse_pressed = WICED_FALSE;
+//
+//    	// If the Mesh has been created or node is provisioned return the function
+//        if(is_provisioned)
+//        {
+//        	// Node provisioned
+//        	WICED_BT_TRACE("Device are provisioned\r\n");
+//        	return;
+//        }
+//        else
+//        {
+//            // Create the Network
+//            create_network();
+//            return;
+//        }
+//    }
+//    else // Not hold pushed button
+//    {
+//    	acuse_pressed = WICED_FALSE;
+//
+//		// Blinking the Led and increment the value of the counter
+//		wiced_hal_gpio_set_pin_output(LED_VEHICLE, !wiced_hal_gpio_get_pin_output(LED_VEHICLE));
+//    }
+//
+//    button_pushed_acuse = 0;
+//    last_button_event_time_ms = current_time_acuse;

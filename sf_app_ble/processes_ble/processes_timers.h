@@ -19,6 +19,7 @@ wiced_bool_t 			ctr_p6 = WICED_TRUE;
 wiced_bool_t 			status_Online = WICED_TRUE;
 wiced_bool_t 			value_inspection=WICED_TRUE;
 uint16_t				app_timer_count;
+uint8_t					app_timer_button;
 
 
 
@@ -44,6 +45,10 @@ extern uint8_t find_node;
 extern wiced_timer_t	bled_timer;
 
 extern wiced_bool_t		blinking_led_timer;
+
+extern wiced_bool_t		acuse_pressed;
+extern wiced_bool_t		onoff_pressed;
+
 
 
 /************************************************************************************************************************************

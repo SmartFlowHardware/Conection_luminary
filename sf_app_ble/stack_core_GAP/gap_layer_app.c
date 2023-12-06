@@ -259,11 +259,11 @@ wiced_result_t beacon_management_callback(wiced_bt_management_evt_t event, wiced
     		// Perform initialization and configuration tasks here
     		beacon_init();				// Start the application configuration
     		config_Transceiver(); 		// Configura puerto uart
-    		start_observe();
-//    		if(is_provisioned)
-//    		{
-//    			start_observe(); 			// Star the observer
-//    		}
+    		//start_observe();
+    		if(is_provisioned)
+    		{
+    			start_observe(); 			// Star the observer
+    		}
 
     		set_outPuts(); 				// Configura pines de salida
     		set_intPuts(); 				// Configura pines de entrada
@@ -539,16 +539,37 @@ void gap_rebroadcastLR(int8_t slt)
 	switch( slt )
 	{
 
-		case 0:
-			// Start advertisement the Node
-	    	wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
-	    	node_set_app_advertisement_data();
+		case 0: // Change the Advertisement to Node
+			/* Advertising is off */
+			wiced_bt_start_advertisements( BTM_BLE_ADVERT_OFF, 0, NULL );
+	    	//wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
+
+			/* Turn Off the LED Connection and reset the variable to unprovisioned */
+			wiced_hal_gpio_set_pin_output(LED_CONECTION, GPIO_PIN_OUTPUT_HIGH);
+	    	is_provisioned = WICED_FALSE;
+
+			/* Configure Advertisement */
+			node_set_app_advertisement_data();
+			app_set_scan_response_data();
+
+			/* Restart the advertisements */
+			wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
 	        return;
 
-		case 1:
-			// Star advertisement the Node in the Network
-	    	wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
+		case 1: // Change the Advertisement to Mesh
+			/* Advertising is off */
+			wiced_bt_start_advertisements( BTM_BLE_ADVERT_OFF, 0, NULL );
+
+			/* Turn On the LED Connection and reset the variable to provisioned */
+			wiced_hal_gpio_set_pin_output(LED_CONECTION, GPIO_PIN_OUTPUT_LOW);
+	    	is_provisioned = WICED_TRUE;
+
+	    	/* Configure Advertisement */
 	    	mesh_set_app_advertisement_data();
+	    	app_set_scan_response_data();
+
+			/* Restart the advertisements */
+			wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
 	    	return;
 
 		default:

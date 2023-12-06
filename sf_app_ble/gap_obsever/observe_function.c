@@ -99,50 +99,54 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     /* --- Filters --- */
     if( p_scan_result && p_scan_result->rssi > -48 )
     {
-    	/* Search for Name element/Device class in the Advertisement data received. */
-    	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
-    	p_device_class = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_DEV_CLASS, &length_scan_node );
-    	p_mesh_beacon = wiced_bt_ble_check_advertising_data( p_adv_data,  BTM_BLE_ADVERT_TYPE_MESH_BEACON, &length_scan_beacon );
+    	/* Search for Information in the Advertisement data received. */
+    	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
+    	p_device_class = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_DEV_CLASS, &length_scan_node );
+    	p_mesh_beacon = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_MESH_BEACON, &length_scan_beacon );
 
     	// Find data
     	if ( p_data_name == NULL )
     	{
     		/* Search for Name element in the Advertisement data received. Check for partial list*/
     		p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_NAME_SHORT, &length_scan );
+
+    		// If doesn't exist information in the advertisement data, return
+//    		if( (p_data_name==NULL) && (p_device_class==NULL) && (p_mesh_beacon==NULL) )
+//    		{
+//    			return;
+//    		}
         }
 
-    	if( p_mesh_beacon )
-    	{
-    		WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
-    		WICED_BT_TRACE_ARRAY(p_mesh_beacon, length_scan_beacon, "Beacon Message: ");
-    	}
+//    	if( p_mesh_beacon )
+//    	{
+//    		WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
+//    		WICED_BT_TRACE_ARRAY(p_mesh_beacon, length_scan_beacon, "Beacon Message: ");
+//    	}
+//
+//    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
+//    	WICED_BT_TRACE_ARRAY(p_adv_data, 21, "Advertisement Package: ");
 
-    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
-    	WICED_BT_TRACE_ARRAY(p_adv_data, 21, "Advertisement Package: ");
+    	/** Filters to detect the devices */
+    	// ----- The Lamp Device is found -----
+//    	if( !memcmp(filter_lamp, p_data_name, sizeof(filter_lamp)) )
+//    	{
+//    		//WICED_BT_TRACE("FIND LAMP RSSI:%d\r\n", p_scan_result->rssi);
+//    		find_lamp = WICED_TRUE;
+//    		wiced_hal_gpio_set_pin_output(LED_PERSON, GPIO_PIN_OUTPUT_HIGH);
+//    		start_lamp_timer();
+//    	}
 
-    	/** Filters without connection */
-    	// The Lamp Device is found
-    	if( !memcmp(filter_lamp, p_data_name, sizeof(filter_lamp)) )
-    	{
-    		//WICED_BT_TRACE("FIND LAMP RSSI:%d\r\n", p_scan_result->rssi);
-    		find_lamp = WICED_TRUE;
-    		wiced_hal_gpio_set_pin_output(LED_PERSON, GPIO_PIN_OUTPUT_HIGH);
-    		start_lamp_timer();
-    	}
+    	// ----- The Tag Device is found -----
+//    	if( !memcmp(filter_tag, p_data_name, sizeof(filter_tag)) )
+//    	{
+//    		//WICED_BT_TRACE("FIND TAG RSSI:%d\r\n", p_scan_result->rssi);
+//    		find_tag = WICED_TRUE;
+//    		wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_HIGH);
+//    		start_tag_timer();
+//    	}
 
-    	// The Tag Device is found
-    	if( !memcmp(filter_tag, p_data_name, sizeof(filter_tag)) )
-    	{
-    		//WICED_BT_TRACE("FIND TAG RSSI:%d\r\n", p_scan_result->rssi);
-    		find_tag = WICED_TRUE;
-    		wiced_hal_gpio_set_pin_output(LED_VEHICLE, GPIO_PIN_OUTPUT_HIGH);
-    		start_tag_timer();
-    	}
-
-
-    	/** Filters that required connection */
-    	// The Node Device is Found
-    	if( !memcmp(filter_node_dev, p_device_class, sizeof(filter_node_dev)) && p_scan_result->rssi > -42 )
+    	// ----- The Node Device is Found -----
+    	if( !memcmp(filter_node, p_data_name, sizeof(filter_node)) && p_scan_result->rssi > -42 )
     	{
     		//WICED_BT_TRACE("FIND NODE RSSI:%d\r\n", p_scan_result->rssi);
     		find_node = WICED_TRUE;
@@ -158,6 +162,8 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	}
 
     	// Message to "connect" at Mesh
+
+    	// Message to communication between Nodes
     }
     else
     {
@@ -209,8 +215,3 @@ void init_event_gap(void)
 
 	}
 }
-
-
-
-
-

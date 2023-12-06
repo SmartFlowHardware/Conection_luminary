@@ -65,24 +65,15 @@ void create_network(void)
     {
     	WICED_BT_TRACE("write node sucesfull id:%d result:%d\n", EMBEDDED_PROV_NODE_ADDR_FIRST, result);
 
+    	// Change the value of the variable
+    	//is_provisioned = WICED_TRUE;
+
+    	// Change the advertisement
+    	gap_rebroadcastLR(1);
+
         // Reset the system using the watchdog timer will reset the system after setting "OTA_Mode_Enabled" to true
-        wiced_hal_wdog_reset_system();
+        //wiced_hal_wdog_reset_system();
     }
-
-    // Configure the local device with parameters defined in 'set' structure
-    //wiced_bt_mesh_provision_local_device_set(&set);
-
-    //node.addr = EMBEDDED_PROV_LOCAL_ADDR;						// Local Address for device
-    //node.num_elements = mesh_config.elements_num;				// Number of element
-
-    //memcpy(node.dev_key, set.dev_key, sizeof(node.dev_key));	// Device Key
-
-    // Configure the key Application (Security and Net Communication)
-    //configure_app_key_add(node.addr, EMBEDDED_PROV_NET_KEY_IDX, app_key, EMBEDDED_PROV_APP_KEY_IDX);
-
-//#if 1
-//    self_configure(EMBEDDED_PROV_LOCAL_ADDR);
-//#endif
 }
 
 
@@ -101,6 +92,14 @@ void mesh_app_factory_reset(void)
     {
         wiced_hal_delete_nvram(i, &result);
     }
+
+    // Change the advertisement
+    gap_rebroadcastLR(0);
+
+	// Change the value of the variable
+	//is_provisioned = WICED_FALSE;
+
+    //wiced_hal_wdog_reset_system();
 }
 
 

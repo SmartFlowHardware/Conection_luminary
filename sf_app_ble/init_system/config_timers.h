@@ -19,6 +19,7 @@
 #define clock_inspection   		20
 #define clock_return5      		5
 #define APP_TIMEOUT_IN_SECONDS	1
+#define APP_TIMEOUT_MILISECONDS 500
 #define TIMEOUT_IN_SECONDS		5
 
 

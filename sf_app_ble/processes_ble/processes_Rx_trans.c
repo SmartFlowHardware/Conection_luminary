@@ -374,7 +374,7 @@ void process_SOM(uint8_t *data_S_OM)
                 WICED_BT_TRACE("Event SPI\n");
 
                 // Call the function gap_rebroadcastLR with a parameter of 1
-                gap_rebroadcastLR(1);
+                gap_rebroadcastLR(2);//1);
 
                 // Set value_sdb to WICED_TRUE and start_TSPI()
                 value_sdb = WICED_TRUE;

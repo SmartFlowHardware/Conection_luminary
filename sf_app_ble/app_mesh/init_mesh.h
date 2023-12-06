@@ -55,11 +55,17 @@ typedef struct
 
 mesh_node_t node;
 
+
+extern wiced_bool_t	is_provisioned;
+
 void		create_network(void);
 void		mesh_app_factory_reset(void);
 uint8_t		generate_random_number(void);
 char*		transmit_node_data(mesh_node_t node, char* user_prefix);
 //char* transmit_node_data(mesh_node_t node);
 void self_configure(uint16_t node_addr);
+
+
+extern void gap_rebroadcastLR(int8_t slt);
 
 #endif /* SF_APP_BLE_APP_MESH_INIT_MESH_H_ */

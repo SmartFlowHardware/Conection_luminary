@@ -64,7 +64,7 @@ void config_clk_timers(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-	wiced_init_timer( &app_main_timer, f_app_main, 0, WICED_SECONDS_PERIODIC_TIMER);
+	wiced_init_timer( &app_main_timer, f_app_main, 0, WICED_MILLI_SECONDS_PERIODIC_TIMER);
 //	wiced_init_timer( &timer_Online, f_timer_Online, 0, WICED_MILLI_SECONDS_TIMER );
 //    wiced_init_timer( &timer_st_Online, f_timer_st_Online, 0, WICED_MILLI_SECONDS_TIMER );
 //    wiced_init_timer( &timer_inspection, f_timer_inspection, 0, WICED_SECONDS_TIMER);
@@ -95,7 +95,7 @@ void start_BTimers(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-	wiced_start_timer(&app_main_timer, APP_TIMEOUT_IN_SECONDS);
+	wiced_start_timer(&app_main_timer, APP_TIMEOUT_MILISECONDS);
 //    wiced_start_timer( &timer_Online, 1000);
 //    wiced_start_timer( &timer_st_Online, clock_st_Online);
 }

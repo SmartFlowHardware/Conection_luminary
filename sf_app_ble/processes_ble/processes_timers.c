@@ -67,6 +67,8 @@
 void f_app_main( TIMER_PARAM_TYPE arg )
 {
 	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+	wiced_hal_gpio_set_pin_output(LED_WARNING, !wiced_hal_gpio_get_pin_output(LED_WARNING));
+	app_timer_count++;
 
 //    wiced_result_t               status;
 //
@@ -76,8 +78,20 @@ void f_app_main( TIMER_PARAM_TYPE arg )
 //        WICED_BT_TRACE( "wiced_bt_ble_scan: %d\n", status );
 //    }
 //    UNUSED_VARIABLE(status);
-//
-//    app_timer_count++;
+
+
+	// Increment the value of the counter timer if is pressed a button
+	if( acuse_pressed || onoff_pressed )
+	{
+		app_timer_button++;
+	}
+	else if( !acuse_pressed && !onoff_pressed )
+	{
+		// Reset the value when both values are Zero
+		app_timer_button = 0;
+		if( app_timer_count >= 60 )
+			app_timer_count = 0;
+	}
 }
 
 
