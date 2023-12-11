@@ -39,7 +39,7 @@ uint8_t filt_SPI[3] = {0x53,0x50,0x49};
 uint8_t filt_NULL[3] = {0x31,0x31,0x31};
 uint8_t data_mcc[6];
 
-uint8_t mesh_device[] = {0x00, 0x00, 0x00};
+uint8_t mesh_device[3];
 
 wiced_bool_t	is_provisioned;
 
@@ -47,7 +47,10 @@ char data_txsf[16];	// Original uint8_t data_txsf[16];
 
 char* data_name_node;
 
-uint8_t mesh_beacon[]={'M', 'E', 'S', 'S', 'A', 'G', 'E', '\n'};
+uint8_t mesh_beacon[]={' ', 'M', 'E', 'S', 'S', 'A', 'G', 'E', 'L', 'A'};
+
+/** Filter to send message to share information about the Network */
+uint8_t mesh_conn_class[] = {0x43, 0x4f, 0x4e}; // CON
 
 uint8_t mesh_message[]={'H','E','L','L','O','\n'};;
 
@@ -59,20 +62,12 @@ uint8_t mesh_message[]={'H','E','L','L','O','\n'};;
 extern const wiced_bt_cfg_settings_t app_cfg_settings2;
 extern const wiced_bt_cfg_buf_pool_t app_buf_pools2[];
 
-
-typedef struct
-{
-//    uint8_t		uuid[16];
-    uint16_t 	addr;
-    uint8_t		fil_key_node[2];
-    uint8_t		net_key_node[2];
-//    uint8_t  	num_elements;
-//    uint8_t  	is_relay;          // the node is currently set as a relay
-//    uint8_t  	dev_key[16];
-//    int8_t   	rssi_table[EMBEDDED_PROV_MAX_NODES];
-} mesh_node_t;
-
 extern mesh_node_t node;
+extern mesh_info_t info_mesh;
+extern uint8_t	inf_network[8];
+extern wiced_bool_t	conn_node_mesh;
+
+wiced_bool_t mode_send_info;
 
 //// Arrays to send data
 //// Array with characters of the introduction
@@ -124,7 +119,8 @@ void                            gap_rebroadcastLR(int8_t slt);
 void							gap_rebroadcastURL(int8_t slt);
 void 							gap_rebroadcastBIO(uint8_t t_sensor, uint16_t data_device);
 
-
+static void 					beacon_set_eddystone_uid_advertisement_data(void);
+static void 					beacon_set_eddystone_ibeacon_advertisement_data();
 
 //void 					app_add_peer_info( uint16_t conn_id, uint8_t s_type, uint8_t* p_bd_addr );
 //wiced_bt_gatt_status_t 	app_connection_up(wiced_bt_gatt_connection_status_t *p_conn_status);
@@ -161,6 +157,8 @@ extern wiced_bt_gatt_status_t 	beacon_gatt_callback( wiced_bt_gatt_evt_t event, 
 
 
 extern char*					transmit_node_data(mesh_node_t node, char* user_prefix);
+
+extern void 					prepare_network_info(const mesh_node_t *node, uint8_t *inf_network);
 
 
 #endif /* SF_APP_BLE_STACK_CORE_GAP_GAP_LAYER_APP_H_ */

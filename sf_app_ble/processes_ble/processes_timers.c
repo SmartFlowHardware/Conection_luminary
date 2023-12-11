@@ -67,7 +67,6 @@
 void f_app_main( TIMER_PARAM_TYPE arg )
 {
 	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-	wiced_hal_gpio_set_pin_output(LED_WARNING, !wiced_hal_gpio_get_pin_output(LED_WARNING));
 	app_timer_count++;
 
 //    wiced_result_t               status;
@@ -92,6 +91,9 @@ void f_app_main( TIMER_PARAM_TYPE arg )
 		if( app_timer_count >= 60 )
 			app_timer_count = 0;
 	}
+
+	// Blinking the LED as indication
+	wiced_hal_gpio_set_pin_output(LED_WARNING, !wiced_hal_gpio_get_pin_output(LED_WARNING));
 }
 
 

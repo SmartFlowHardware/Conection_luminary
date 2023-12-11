@@ -16,7 +16,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "malloc.h"
+#include "mesh_definitions.h"
 #include "init_mesh.h"
+
+
+
+void prepare_network_info(const mesh_node_t *node, uint8_t *inf_network)
+{
+    if (node == NULL || inf_network == NULL)
+    {
+        // Handle errors or debug messages
+        return;
+    }
+
+    // Keep the information of the Network ready to send
+    inf_network[0] = 0; // Something
+    inf_network[1] = 0; // Something
+    inf_network[2] = node->last_addr;
+    inf_network[3] = node->max_dst;
+    memcpy(inf_network + 4, node->net_key_node, sizeof(node->net_key_node));
+}
 
 
 /*
@@ -47,14 +66,13 @@ void create_network(void)
     node.max_dst = EMBEDDED_PROV_HOPS;				// Set the hops through the Network to destiny, default is 2
 
     // Create the Network Key
-    *(uint8_t*)&node.fil_key_node[0] = wiced_hal_rand_gen_num();
-    *(uint8_t*)&node.fil_key_node[1] = wiced_hal_rand_gen_num();
+    node.net_key_node[0] = 0x4e;//wiced_hal_rand_gen_num();
+    node.net_key_node[1] = 0x45;//wiced_hal_rand_gen_num();
+    node.net_key_node[2] = 0x54;//wiced_hal_rand_gen_num();
 
     // Create the Filter Key
     *(uint8_t*)&node.fil_key_node[0] = wiced_hal_rand_gen_num();
     *(uint8_t*)&node.fil_key_node[1] = wiced_hal_rand_gen_num();
-
-    WICED_BT_TRACE("Create net | addr:%x\n", node.addr);
 
     // Save the information about the 'node' in the NVRAM
     if (wiced_hal_write_nvram(EMBEDDED_PROV_NODE_ADDR_FIRST, sizeof(node), (uint8_t*)&node, &result) != sizeof(node))
@@ -64,17 +82,40 @@ void create_network(void)
     else
     {
     	WICED_BT_TRACE("write node sucesfull id:%d result:%d\n", EMBEDDED_PROV_NODE_ADDR_FIRST, result);
+    	WICED_BT_TRACE("Create net | addr:%x | NKey: %02X %02X %02X ", node.addr, node.net_key_node[0], node.net_key_node[1], node.net_key_node[2]);
+    	WICED_BT_TRACE("| last addr:%x | max_dst:%x\n", node.last_addr, node.max_dst);
 
-    	// Change the value of the variable
-    	//is_provisioned = WICED_TRUE;
+    	// Save the information about the Network to send
+    	prepare_network_info(&node, inf_network);
 
     	// Change the advertisement
-    	gap_rebroadcastLR(1);
-
-        // Reset the system using the watchdog timer will reset the system after setting "OTA_Mode_Enabled" to true
-        //wiced_hal_wdog_reset_system();
+    	gap_rebroadcastLR(MESH_ADV);
     }
 }
+
+
+void copy_info_net(uint8_t *p_info_net)
+{
+	WICED_BT_TRACE_ARRAY(p_info_net, 8, "Info Net: ");
+
+	// Save the information on a structure
+	info_mesh.addr    = p_info_net[2];
+	info_mesh.max_dst = p_info_net[3];
+	memcpy(info_mesh.net_key, p_info_net + 4, sizeof(info_mesh.net_key));
+
+	// Filter to ask to connect
+	info_mesh.message_conn[0] = ' ';	// Space empty
+	info_mesh.message_conn[1] = 'C';	// C
+	info_mesh.message_conn[2] = 'N';	// Something
+	info_mesh.message_conn[3] = info_mesh.addr;
+
+	WICED_BT_TRACE("Info Net | addr:%x | max_dst:%x | NKey: %02X %02X %02X\r\n", info_mesh.addr, info_mesh.max_dst, info_mesh.net_key[0], info_mesh.net_key[1], info_mesh.net_key[2]);
+	WICED_BT_TRACE_ARRAY(info_mesh.message_conn, 8, "Message Connection: ");
+
+	// Change the advertisement
+	gap_rebroadcastLR(0);
+}
+
 
 
 /*
@@ -95,12 +136,23 @@ void mesh_app_factory_reset(void)
 
     // Change the advertisement
     gap_rebroadcastLR(0);
-
-	// Change the value of the variable
-	//is_provisioned = WICED_FALSE;
-
-    //wiced_hal_wdog_reset_system();
 }
+
+
+//wiced_bool_t save_message_data(wiced_bt_ble_scan_results_t *p_scan_result)
+//{
+//	// Pointer to bluetooth device address
+//	uint8_t				*p_mesh_adds;
+//	p_mesh_adds = p_scan_result->remote_bd_addr;	// Assign the pointer to the variable of bluetooth device address
+//
+//	// Copy the bytes from the array pointer
+//	for(int = 0; i< BBD_ADDR_LEN; i++)
+//	{
+//
+//	}
+//
+//}
+
 
 
 uint8_t generate_random_number(void)
@@ -140,83 +192,3 @@ char* transmit_node_data(mesh_node_t node, char* user_prefix)
     // Returns the generated string
     return result;
 }
-
-
-
-///*
-// * Create network and self provision to this network.
-// */
-//void create_network(void)
-//{
-//	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-//
-//	// Information of the Net and local device
-//    wiced_bt_mesh_local_device_set_data_t set;	// Structure contains information of the provisioner application
-//    mesh_node_t node;							// Structure contains information of the node
-//    wiced_result_t result;						// Variable to save the result
-//    uint8_t app_key[16];
-//
-//    memset(&set, 0, sizeof(set));				// Clean the structure
-//
-//    set.addr = EMBEDDED_PROV_LOCAL_ADDR;		// Set the address provisioner application
-//
-//    // Create the Device Key
-//    *(uint32_t*)&set.dev_key[0] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.dev_key[4] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.dev_key[8] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.dev_key[12] = wiced_hal_rand_gen_num();
-//
-//    // Create the Network Key
-//    *(uint32_t*)&set.network_key[0] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.network_key[4] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.network_key[8] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&set.network_key[12] = wiced_hal_rand_gen_num();
-//
-//    set.net_key_idx = EMBEDDED_PROV_NET_KEY_IDX;	// Index for the Network KeY
-//
-//    // Create the Application Key
-//    *(uint32_t*)&app_key[0] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&app_key[4] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&app_key[8] = wiced_hal_rand_gen_num();
-//    *(uint32_t*)&app_key[12] = wiced_hal_rand_gen_num();
-//
-//    WICED_BT_TRACE("-create net addr:%x net_key_idx:%x iv_idx:%x key_refresh:%d iv_upd:%d model_access:%d-\n", set.addr, set.net_key_idx, set.iv_idx, set.key_refresh, set.iv_update);
-//
-//    // Configure the local device with parameters defined in 'set' structure
-//    wiced_bt_mesh_provision_local_device_set(&set);
-//
-//    node.addr = EMBEDDED_PROV_LOCAL_ADDR;						// Local Address for device
-//    //node.num_elements = mesh_config.elements_num;				// Number of element
-//
-//    memcpy(node.dev_key, set.dev_key, sizeof(node.dev_key));	// Device Key
-//
-//    // Save the information about the 'node' in the NVRAM
-//    if (wiced_hal_write_nvram(EMBEDDED_PROV_NODE_ADDR_FIRST, sizeof(node), (uint8_t*)&node, &result) != sizeof(node))
-//    {
-//        WICED_BT_TRACE("write node failed id:%d result:%d\n", EMBEDDED_PROV_NODE_ADDR_FIRST, result);
-//    }
-//
-//    // Configure the key Application (Security and Net Communication)
-//    //configure_app_key_add(node.addr, EMBEDDED_PROV_NET_KEY_IDX, app_key, EMBEDDED_PROV_APP_KEY_IDX);
-//
-//#if 1
-//    self_configure(EMBEDDED_PROV_LOCAL_ADDR);
-//#endif
-//}
-//
-//
-///*
-// * Self provision to this network.
-// */
-//void self_configure(uint16_t node_addr)
-//{
-//	// Star with the self configure of the node in the Bluetooth Mesh
-//	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-//
-//    cur_model_idx = 0;
-//    cur_element_idx = 0;
-//
-//    // Initialize a timer to program and execute the next step in a after moment
-//    wiced_init_timer(&self_config_timer, self_configure_next_op, (TIMER_PARAM_TYPE)node_addr, WICED_MILLI_SECONDS_TIMER);
-//    self_configure_next_op((TIMER_PARAM_TYPE)node_addr);	// Call at the function for start the self configuration process
-//}

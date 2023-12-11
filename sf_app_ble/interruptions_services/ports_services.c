@@ -32,6 +32,7 @@
 #include "wiced_bt_trace.h"
 #include "wiced_hal_puart.h"
 #include "wiced_bt_stack.h"
+#include "mesh_definitions.h"
 #include "ports_services.h"
 #include "config_ports.h"
 
@@ -140,26 +141,23 @@ void button_cback_acuse( void *data, uint8_t port_pin )
 		return;
 	}
 
-	WICED_BT_TRACE("[%s], app timer : %d\n", __FUNCTION__, app_timer_count );
+	WICED_BT_TRACE("[%s] app timer count:%d\n", __FUNCTION__, app_timer_count );
 
 	// Check if button is pressed
 	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ACUSE ) == GPIO_PIN_OUTPUT_HIGH )
 	{
-		WICED_BT_TRACE( "Button pressed\r\n" );
-
         btn_push_tm_acuse = app_timer_count;
-        WICED_BT_TRACE( "btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
+        WICED_BT_TRACE( "Button ACUSE pressed | btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
 	}
 	// Check if the button was released
 	else if ( btn_push_tm_acuse != 0 )
 	{
-		WICED_BT_TRACE( "btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
-		WICED_BT_TRACE( "app_timer_count: %d\r\n", app_timer_count );
+		WICED_BT_TRACE( "btn_push_tm_acuse:%d | app_timer_count:%d\r\n", btn_push_tm_acuse, app_timer_count );
 
     	// Check that time was pressed the button ( if is higher TIME_PUSH_BUTTON_MIN ) change configuration
     	if( (app_timer_count - btn_push_tm_acuse) > TIME_PUSH_BUTTON_MIN )
     	{
-    		WICED_BT_TRACE( "Button released After more than 2s, Change configuration\r\n" );
+    		WICED_BT_TRACE( "Button released After more than 2s, Create Network\r\n" );
 
     		// If the Mesh has been created or node is provisioned return the function
     		if(is_provisioned)
@@ -178,12 +176,27 @@ void button_cback_acuse( void *data, uint8_t port_pin )
     	}
     	else if( ( ( app_timer_count - btn_push_tm_acuse ) <= TIME_PUSH_BUTTON_MIN ) )
     	{
-    		// Turn On the LED
-
-            WICED_BT_TRACE( "Button released Before less than 2s, Start Timer\r\n");
+            WICED_BT_TRACE( "Button released Before less than 2s, Change Advertisement\r\n");
 
             // Blinking the Led and increment the value of the counter
             wiced_hal_gpio_set_pin_output(LED_PERSON, !wiced_hal_gpio_get_pin_output(LED_PERSON));
+
+            if((node.addr == 1) && find_node)
+            {
+            	WICED_BT_TRACE("Advertisement Connect Message Active\r\n");
+
+            	// Start to transmit the "connect" message
+            	mode_send_info = WICED_TRUE;
+            	gap_rebroadcastLR(BEACON_INFO_MESH_UID_ADV);
+            }
+            else if((node.addr == 1) && !find_node)
+            {
+            	WICED_BT_TRACE("Advertisement Connect Message Not Active\r\n");
+
+            	// There is not a Node to connect to the Network
+            	mode_send_info = WICED_FALSE;
+            	//gap_rebroadcastLR(1);
+            }
     	}
 
     	btn_push_tm_acuse = 0; 						// Reset the time of button after process the event
@@ -215,30 +228,29 @@ void button_cback_on_off( void *data, uint8_t port_pin )
 		return;
 	}
 
-	WICED_BT_TRACE("[%s], app timer : %d\n", __FUNCTION__, app_timer_count );
+	WICED_BT_TRACE("[%s] app timer count:%d\n", __FUNCTION__, app_timer_count );
 
 	// Check if button is pressed
 	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ON_OFF ) == GPIO_PIN_OUTPUT_HIGH )
 	{
-		WICED_BT_TRACE( "Button pressed\r\n" );
-
         btn_push_tm_onoff = app_timer_count;
-        WICED_BT_TRACE( "btn_push_tm_onoff: %d\r\n", btn_push_tm_onoff );
+        WICED_BT_TRACE( "Button ON/OFF pressed | btn_push_tm_onoff: %d\r\n", btn_push_tm_onoff );
 	}
 	// Check if the button was released
 	else if ( btn_push_tm_onoff != 0 )
 	{
-		WICED_BT_TRACE( "btn_push_tm_onoff: %d\r\n", btn_push_tm_onoff );
-		WICED_BT_TRACE( "app_timer_count: %d\r\n", app_timer_count );
+		WICED_BT_TRACE( "btn_push_tm_onoff:%d | app_timer_count:%d\r\n", btn_push_tm_onoff, app_timer_count );
 
     	// Check that time was pressed the button ( if is higher TIME_PUSH_BUTTON_MIN ) change configuration
     	if( (app_timer_count - btn_push_tm_onoff) > TIME_PUSH_BUTTON_MIN )
     	{
-    		WICED_BT_TRACE( "Button released After more than 2s, Change configuration\r\n" );
+    		WICED_BT_TRACE( "Button released After more than 2s, Delete Network\r\n" );
 
     		// If the Mesh has been created or node is provisioned return the function
     		if(is_provisioned)
     		{
+    			WICED_BT_TRACE("Delete Network\r\n");
+
     			// Delete information about the Mesh
     			mesh_app_factory_reset();
     			//return;

@@ -42,11 +42,14 @@ wiced_bool_t	blinking_led_timer;
 wiced_bool_t	find_lamp;
 wiced_bool_t	find_tag;
 wiced_bool_t	find_node;
+wiced_bool_t	conn_node_mesh;
 
 /** Variables to identify the type of Name */
 uint8_t		filter_lamp[] = { 0x4c, 0x34, 0x53, 0x45, 0x43, 0x20, 0x42, 0x53, 0x4c };	// L4SEC BSL
 uint8_t		filter_tag[] = { 0x4c, 0x41, 0x49, 0x52, 0x44, 0x20, 0x42, 0x4c };			// LAIRD BL
-uint8_t		filter_node[] = { 0x4e, 0x4f, 0x44, 0x45, 0x4c, 0x20, 0x42, 0x53, 0x4c };	// NODEL BSL
+uint8_t		filter_node[] = { 0x4e, 0x4f, 0x44, 0x45, 0x42, 0x20, 0x42, 0x53, 0x4c };	// NODEB BSL
+uint8_t		filter_mesh_conn[] = { 0x43, 0x4f, 0x4e };									// CON
+uint8_t		filter_node_rsp[] = { 0x43, 0x4e };											// CN
 
 /** Variable to identify the device class (Node unprovisioned) */
 uint8_t		filter_node_dev[] = { 0x4e, 0x44, 0x4c };	// NDL (Node not provisioned)
@@ -58,7 +61,9 @@ uint8_t		filter_node_dev[] = { 0x4e, 0x44, 0x4c };	// NDL (Node not provisioned)
 //uint8_t dataFilt[5];
 //uint8_t dataFiltBC[5];
 
-
+extern wiced_bool_t is_provisioned;
+extern mesh_node_t node;
+extern uint8_t copy_network[8];
 
 /************************************************************************************************************************************
  *  Imported Function Declarations
@@ -86,6 +91,8 @@ extern void start_lamp_timer(void);
 extern void start_tag_timer(void);
 extern void start_node_timer(void);
 extern void start_bled_timer(void);
+
+extern void copy_info_net(uint8_t *p_info_net);
 
 //extern             void start_trOTA(uint32_t t_clk);
 

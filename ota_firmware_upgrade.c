@@ -293,8 +293,6 @@ APPLICATION_START()
 
         // Register call back and configuration with stack
         wiced_bt_stack_init( app_management_callback, &app_cfg_settings, app_buf_pools );
-
-        mesh_app_factory_reset();
     }
     else
     {

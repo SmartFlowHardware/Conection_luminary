@@ -50,6 +50,8 @@
 #include "wiced_bt_mesh_app.h"
 #include "wiced_bt_mesh_core.h"
 
+#include "mesh_definitions.h"
+
 #include "config_ports.h"
 #include "gap_layer_app.h"
 
@@ -179,17 +181,21 @@ void beacon_init(void)
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
     	is_provisioned = WICED_FALSE;
     	node_set_app_advertisement_data();
-    	app_set_scan_response_data();
+    	//gap_rebroadcastLR(2);
+    	//app_set_scan_response_data();
     }
     else
     {
     	// Node provisioned ( Created Network )
     	WICED_BT_TRACE("Mesh Adv--------\n\r");
-    	//data_name_node = transmit_node_data(node, "NELAS");
     	wiced_hal_gpio_configure_pin(LED_CONECTION, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
     	is_provisioned = WICED_TRUE;
+    	WICED_BT_TRACE("DATA | NKey: %02X %02X %02X\n", node.net_key_node[0], node.net_key_node[1], node.net_key_node[2]);
+    	// Save the information about the Network to send
+    	prepare_network_info(&node, inf_network);
     	mesh_set_app_advertisement_data();
-    	app_set_scan_response_data();
+    	//gap_rebroadcastLR(2);
+    	//app_set_scan_response_data();
     }
 
     // Log message to indicate that UUID is cleared.
@@ -259,11 +265,11 @@ wiced_result_t beacon_management_callback(wiced_bt_management_evt_t event, wiced
     		// Perform initialization and configuration tasks here
     		beacon_init();				// Start the application configuration
     		config_Transceiver(); 		// Configura puerto uart
-    		//start_observe();
-    		if(is_provisioned)
-    		{
-    			start_observe(); 			// Star the observer
-    		}
+    		start_observe();
+//    		if(is_provisioned)
+//    		{
+//    			start_observe(); 			// Star the observer
+//    		}
 
     		set_outPuts(); 				// Configura pines de salida
     		set_intPuts(); 				// Configura pines de entrada
@@ -444,14 +450,40 @@ void mesh_set_app_advertisement_data(void)
     num_elem++;
 
     adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
-    adv_elem[num_elem].len			= sizeof(mesh_device);
-    adv_elem[num_elem].p_data		= mesh_device;
+    adv_elem[num_elem].len			= sizeof(node.net_key_node);
+    adv_elem[num_elem].p_data		= node.net_key_node;
     num_elem++;
 
     adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
     adv_elem[num_elem].len          = sizeof(mesh_beacon);
     adv_elem[num_elem].p_data       = mesh_beacon;
     num_elem++;
+
+    // Adjust message if is required to send information about the Mesh
+//    if( mode_send_info )
+//    {
+//        adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
+//        adv_elem[num_elem].len			= sizeof(mesh_conn_class);
+//        adv_elem[num_elem].p_data		= mesh_conn_class;
+//        num_elem++;
+//
+//        adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
+//        adv_elem[num_elem].len          = sizeof(inf_network);
+//        adv_elem[num_elem].p_data       = inf_network;
+//        num_elem++;
+//    }
+//    else
+//    {
+//        adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
+//        adv_elem[num_elem].len			= sizeof(node.net_key_node);
+//        adv_elem[num_elem].p_data		= node.net_key_node;
+//        num_elem++;
+//
+//        adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
+//        adv_elem[num_elem].len          = sizeof(mesh_beacon);
+//        adv_elem[num_elem].p_data       = mesh_beacon;
+//        num_elem++;
+//    }
 
     wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
 
@@ -475,18 +507,18 @@ void node_set_app_advertisement_data(void)
     num_elem++;
 
     adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len          = strlen((const char *)"NODEL BSL");
-    adv_elem[num_elem].p_data       = (uint8_t*)"NODEL BSL";
+    adv_elem[num_elem].len          = strlen((const char *)"NODEB BSL");
+    adv_elem[num_elem].p_data       = (uint8_t*)"NODEB BSL";
     num_elem++;
 
     adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
-    adv_elem[num_elem].len			= sizeof(app_cfg_settings2.device_class);
-    adv_elem[num_elem].p_data		= app_cfg_settings2.device_class;
+    adv_elem[num_elem].len 			= (conn_node_mesh) ? sizeof(info_mesh.net_key) : sizeof(app_cfg_settings2.device_class);
+    adv_elem[num_elem].p_data 		= (conn_node_mesh) ? info_mesh.net_key : app_cfg_settings2.device_class;
     num_elem++;
 
     adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
-    adv_elem[num_elem].len          = sizeof(mesh_beacon);
-    adv_elem[num_elem].p_data       = mesh_beacon;
+    adv_elem[num_elem].len 			= (conn_node_mesh) ? sizeof(info_mesh.message_conn) : sizeof(mesh_beacon);//10
+    adv_elem[num_elem].p_data 		= (conn_node_mesh) ? info_mesh.message_conn : mesh_beacon;
     num_elem++;
 
     wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
@@ -522,27 +554,22 @@ void app_set_scan_response_data( void )
 
 void gap_rebroadcastLR(int8_t slt)
 {
-	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-
-	//WICED_BT_TRACE("RSSI3:%d\n",rssi);
-	//uint8_t *Data_Txg=NULL;
-	//Data_Txg=&bda[0];
-	//memcpy(data_mcc,Data_Txg,6);
-
-
+	WICED_BT_TRACE("[%s] | Event:%d\r\n", __FUNCTION__, slt);
 	/* Set sample values for Eddystone UID*/
 	uint8_t eddystone_ranging_data = 0xf0;
-	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];
-	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];
-	uint16_t time_send_data;
+	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];// = { 1,2,3,4,5,6,7,8,9,0 };
+	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];// = { 0,1,2,3,4,5 };
+	uint16_t time_send_data; //960; // 600 ms
+
+	// Length order
+	uint8_t	len_array;
 
 	switch( slt )
 	{
-
-		case 0: // Change the Advertisement to Node
+		case NODE_ADV:
+			//wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
 			/* Advertising is off */
 			wiced_bt_start_advertisements( BTM_BLE_ADVERT_OFF, 0, NULL );
-	    	//wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
 
 			/* Turn Off the LED Connection and reset the variable to unprovisioned */
 			wiced_hal_gpio_set_pin_output(LED_CONECTION, GPIO_PIN_OUTPUT_HIGH);
@@ -550,27 +577,49 @@ void gap_rebroadcastLR(int8_t slt)
 
 			/* Configure Advertisement */
 			node_set_app_advertisement_data();
-			app_set_scan_response_data();
+			//app_set_scan_response_data();
 
 			/* Restart the advertisements */
-			wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
-	        return;
+			//wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
+	        break;
 
-		case 1: // Change the Advertisement to Mesh
+		case MESH_ADV:
 			/* Advertising is off */
 			wiced_bt_start_advertisements( BTM_BLE_ADVERT_OFF, 0, NULL );
 
 			/* Turn On the LED Connection and reset the variable to provisioned */
 			wiced_hal_gpio_set_pin_output(LED_CONECTION, GPIO_PIN_OUTPUT_LOW);
 	    	is_provisioned = WICED_TRUE;
+	    	WICED_BT_TRACE("DATA | NKey: %02X %02X %02X\n", node.net_key_node[0], node.net_key_node[1], node.net_key_node[2]);
 
 	    	/* Configure Advertisement */
 	    	mesh_set_app_advertisement_data();
-	    	app_set_scan_response_data();
+	    	//app_set_scan_response_data();
 
 			/* Restart the advertisements */
-			wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
-	    	return;
+			//wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
+	    	break;
+
+		case BEACON_INFO_MESH_UID_ADV:
+			// Length order
+			len_array = sizeof(mesh_conn_class);
+
+			//Clean the main array
+			memset(data_txsf, 0, sizeof(data_txsf));
+			memset(eddystone_instance, 0, sizeof(eddystone_instance));
+
+			// ---------- Information in the Namespace ----------
+			// Copy the Key to Connection (eddystone namespace)
+			memcpy(data_txsf, mesh_conn_class, len_array);
+
+			// Copy the next address, the number of hops and Network Key
+			memcpy(data_txsf + len_array, inf_network, sizeof(inf_network));
+
+			// ---------- Information in the Instance ----------
+
+			// ---------- Time of advertisement the UID ---------
+			time_send_data = 960;	// Each 600 milliseconds
+			break;
 
 		default:
 	    	//Clean the main array
@@ -588,260 +637,42 @@ void gap_rebroadcastLR(int8_t slt)
 			break;
 	}
 
-	//memcpy(data_txsf + sizeof(filt_sf1), &data_mcc, sizeof(data_mcc));
-	//data_txsf[8]=rssi;
-	//data_txsf[2]=slt;
-
-	WICED_BT_TRACE("Data_Txg1 ");
-	wiced_hal_puart_print(data_txsf);
-	WICED_BT_TRACE("\n");
-	WICED_BT_TRACE_ARRAY(data_txsf, 16, "DATARRXXXX ");
-
-	//-----------------------------------------------------------------------------------------------
-    uint8_t adv_data_uid[31];
-    uint8_t adv_len_uid = 0;
-
-    memset(adv_data_uid, 0, 31);
-
-    /* Call Eddystone UID api to prepare adv data*/
-    wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data,  (uint8_t*)data_txsf, eddystone_instance, adv_data_uid, &adv_len_uid);
-
-    /* Sets adv data for multi adv instance*/
-    wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
-
-    /* Start Eddystone UID advertisements */
-    adv_param.adv_int_min = time_send_data; // 1000 ms
-    adv_param.adv_int_max = time_send_data;
-
-#if defined(CYW20735B1) || defined(CYW20819A1) || defined(CYW20719B2) || defined(CYW20721B2) || defined (WICEDX)
-    wiced_set_multi_advertisement_params(BEACON_EDDYSTONE_UID, &adv_param);
-#else
-    wiced_set_multi_advertisement_params(adv_param.adv_int_min, adv_param.adv_int_max, adv_param.adv_type,
-            adv_param.own_addr_type, adv_param.own_bd_addr, adv_param.peer_addr_type, adv_param.peer_bd_addr,
-            adv_param.channel_map, adv_param.adv_filter_policy,
-            BEACON_EDDYSTONE_UID, adv_param.adv_tx_power);
-#endif
-
-    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
-
-	/*wiced_result_t         result;
-    wiced_bt_ble_advert_elem_t adv_elem[2];
-    uint8_t num_elem = 0;
-    uint8_t flag = BTM_BLE_GENERAL_DISCOVERABLE_FLAG | BTM_BLE_BREDR_NOT_SUPPORTED;
-
-    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_FLAG;
-    adv_elem[num_elem].len          = sizeof(uint8_t);
-    adv_elem[num_elem].p_data       = &flag;
-    num_elem++;
-
-    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len          = strlen((const char *)Data_Txg);
-    adv_elem[num_elem].p_data       = (uint8_t*)Data_Txg;
-    num_elem++;
-
-    WICED_BT_TRACE("Data_Txg2");
-    wiced_hal_puart_print(Data_Txg);
-    WICED_BT_TRACE("\n");
-    rssi2=Data_Txg[8];
-    WICED_BT_TRACE("RSSI4:%d\n",rssi2);
-
-    wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
-
-    result =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
-    WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", result);*/
-}
-
-
-
-
-
-
-void gap_rebroadcastBIO(uint8_t t_sensor, uint16_t data_device)
-{
-	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-
-	//WICED_BT_TRACE("RSSI3:%d\n",rssi);
-	//uint8_t *Data_Txg=NULL;
-	//Data_Txg=&bda[0];
-	//memcpy(data_mcc,Data_Txg,6);
-
-    uint8_t first_part 	= (uint8_t)(data_device >> 8);		// Get the byte high
-    uint8_t second_part = (uint8_t)(data_device & 0xFF);	// Get the byte low
-
-    uint8_t thousands;
-    uint8_t hundreds;
-    uint8_t tens;
-    uint8_t units;
-
-	/* Set sample values for Eddystone UID*/
-	uint8_t eddystone_ranging_data = 0xf0;
-	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];
-	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];
-	uint16_t time_send_data;
-
-	uint8_t scanner_active[]={0x01,0x01,0x01};
-	uint8_t scanner_innactive[]={0x00,0x00,0x00};
-
-	switch( t_sensor )
+	// If the device is provisioned activate the Beacon UID
+	if( is_provisioned )
 	{
+		WICED_BT_TRACE("Data_Txg1 ");
+		wiced_hal_puart_print(data_txsf);
+		WICED_BT_TRACE("\n");
+		WICED_BT_TRACE_ARRAY(data_txsf, 16, "DATARRXXXX ");
 
-		case 0:
-			//memcpy(data_txsf,filt_NULL,3);
-	    	wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
-	    	node_set_app_advertisement_data();
-	        return;
+		//-----------------------------------------------------------------------------------------------
+	    uint8_t adv_data_uid[31];
+	    uint8_t adv_len_uid = 0;
 
-	    // Case for send data from Health Thermometer
-	    case 1:
-	    	//Clean the main array
-	    	memset(data_txsf, 0, sizeof(data_txsf));
+	    memset(adv_data_uid, 0, 31);
 
-	    	// Add the identifier ( 'HT' ) at first four values
-	    	memcpy(data_txsf, device_id_HT, sizeof(device_id_HT));
+	    /* Call Eddystone UID api to prepare adv data*/
+	    wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data, (uint8_t*)data_txsf, eddystone_instance, adv_data_uid, &adv_len_uid);
 
-	    	thousands = data_device / 1000;
-	    	hundreds = ( data_device % 1000 ) / 100;
+	    /* Sets adv data for multi adv instance*/
+	    wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
 
-	    	first_part = ( thousands*10 ) + hundreds;
+	    /* Start Eddystone UID advertisements */
+	    adv_param.adv_int_min = time_send_data;
+	    adv_param.adv_int_max = time_send_data;
 
-	    	tens = ( data_device % 100 ) / 10;
-	    	units = ( data_device % 10 );
+	#if defined(CYW20735B1) || defined(CYW20819A1) || defined(CYW20719B2) || defined(CYW20721B2) || defined (WICEDX)
+	    wiced_set_multi_advertisement_params(BEACON_EDDYSTONE_UID, &adv_param);
+	#else
+	    wiced_set_multi_advertisement_params(adv_param.adv_int_min, adv_param.adv_int_max, adv_param.adv_type,
+	            adv_param.own_addr_type, adv_param.own_bd_addr, adv_param.peer_addr_type, adv_param.peer_bd_addr,
+	            adv_param.channel_map, adv_param.adv_filter_policy,
+	            BEACON_EDDYSTONE_UID, adv_param.adv_tx_power);
+	#endif
 
-	    	second_part= ( tens*10 ) + units ;
-
-	    	// Add the Bluetooth device address and the Beacon ID
-	    	memcpy(data_txsf + 2, &first_part, sizeof(first_part));
-
-	    	// Add the Bluetooth device address and the Beacon ID
-	    	memcpy(data_txsf + 3, &second_part, sizeof(second_part));
-
-	    	// Add not name here
-	    	// Clean the eddystone_instance
-	    	//memset(eddystone_instance, 0, sizeof(eddystone_instance));
-
-	    	time_send_data = 450;	// 250 miliseconds
-
-	        break;
-
-		// Case for send data from Heart Rate
-		case 2:
-			//Clean the main array
-			memset(data_txsf, 0, sizeof(data_txsf));
-
-			// Add the identifier ( 'HR' ) at first four values
-			memcpy(data_txsf, device_id_HR, sizeof(device_id_HR));
-
-			// Add the Bluetooth device address and the Beacon ID
-			memcpy(data_txsf + 2, &second_part, sizeof(second_part));
-
-			// Add the Bluetooth device address and the Beacon ID
-			memcpy(data_txsf + 3, &first_part, sizeof(first_part));
-
-
-			// Separate the URL into two arrays
-			//separate_array_into_two( array_name_beacon, &data_txsf[2], eddystone_instance ); // &data_txsf[2]
-
-			//memcpy(data_txsf + 10, eddystone_instance, 16);
-
-			// Add the Bluetooth device address and the Beacon ID
-			//memcpy(data_txsf + 2, array_bd_addr, 9);
-
-			// Clean the eddystone_instance
-			//memset(eddystone_instance, 0, sizeof(eddystone_instance));
-
-			// Add the name of Beacon 2 at the eddystone instance
-			//memcpy(eddystone_instance, array_name_beacon, EDDYSTONE_UID_INSTANCE_ID_LEN);
-
-			time_send_data = 400;	// 250 miliseconds
-
-		    break;
-
-		case 3:
-			//Clean the main array
-			memset(data_txsf, 0, sizeof(data_txsf));
-
-			memcpy(data_txsf, scanner_active, sizeof(scanner_active));
-			break;
-
-		case 4:
-			//Clean the main array
-			memset(data_txsf, 0, sizeof(data_txsf));
-
-			memcpy(data_txsf, scanner_innactive, sizeof(scanner_innactive));
-			break;
-
-		default:
-			break;
+	    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
 	}
-
-	//memcpy(data_txsf + sizeof(filt_sf1), &data_mcc, sizeof(data_mcc));
-	//data_txsf[8]=rssi;
-	//data_txsf[2]=slt;
-
-//	WICED_BT_TRACE("Data_Txg1 ");
-//	wiced_hal_puart_print(data_txsf);
-//	WICED_BT_TRACE("\n");
-//	WICED_BT_TRACE_ARRAY(data_txsf, 16, "DATARRXXXX ");
-
-	//-----------------------------------------------------------------------------------------------
-    uint8_t adv_data_uid[31];
-    uint8_t adv_len_uid = 0;
-
-    memset(adv_data_uid, 0, 31);
-
-    /* Call Eddystone UID api to prepare adv data*/
-    wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data,  (uint8_t*)data_txsf, eddystone_instance, adv_data_uid, &adv_len_uid);
-
-    /* Sets adv data for multi adv instance*/
-    wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
-
-    /* Start Eddystone UID advertisements */
-    adv_param.adv_int_min = time_send_data; // 1000 ms
-    adv_param.adv_int_max = time_send_data;
-
-#if defined(CYW20735B1) || defined(CYW20819A1) || defined(CYW20719B2) || defined(CYW20721B2) || defined (WICEDX)
-    wiced_set_multi_advertisement_params(BEACON_EDDYSTONE_UID, &adv_param);
-#else
-    wiced_set_multi_advertisement_params(adv_param.adv_int_min, adv_param.adv_int_max, adv_param.adv_type,
-            adv_param.own_addr_type, adv_param.own_bd_addr, adv_param.peer_addr_type, adv_param.peer_bd_addr,
-            adv_param.channel_map, adv_param.adv_filter_policy,
-            BEACON_EDDYSTONE_UID, adv_param.adv_tx_power);
-#endif
-
-    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
-
-	/*wiced_result_t         result;
-    wiced_bt_ble_advert_elem_t adv_elem[2];
-    uint8_t num_elem = 0;
-    uint8_t flag = BTM_BLE_GENERAL_DISCOVERABLE_FLAG | BTM_BLE_BREDR_NOT_SUPPORTED;
-
-    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_FLAG;
-    adv_elem[num_elem].len          = sizeof(uint8_t);
-    adv_elem[num_elem].p_data       = &flag;
-    num_elem++;
-
-    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
-    adv_elem[num_elem].len          = strlen((const char *)Data_Txg);
-    adv_elem[num_elem].p_data       = (uint8_t*)Data_Txg;
-    num_elem++;
-
-    WICED_BT_TRACE("Data_Txg2");
-    wiced_hal_puart_print(Data_Txg);
-    WICED_BT_TRACE("\n");
-    rssi2=Data_Txg[8];
-    WICED_BT_TRACE("RSSI4:%d\n",rssi2);
-
-    wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
-
-    result =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
-    WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", result);*/
 }
-
-
-
-
-
-
 
 
 /************************************************************************************************************************************
