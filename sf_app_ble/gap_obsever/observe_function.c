@@ -94,14 +94,16 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 	uint8_t			len;
 	uint16_t                	service_uuid16 = 0;	// Variable assistant to convert a uint16_t value
 
+	uint8_t *p_name=NULL;    //
+	p_name= &p_adv_data[5];  //
+
     if (p_scan_result == NULL )
         return;
 
 
     //WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
-
     /* --- Filters --- */
-    if( p_scan_result && p_scan_result->rssi > -48 )
+    if( p_scan_result && p_scan_result->rssi > -50)
     {
     	/* Search for Information in the Advertisement data received. */
     	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
@@ -161,13 +163,15 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         		}
         	}
 
-        	// ----- The Node Device is Found -----
-        	if(!memcmp(filter_node, p_data_name, sizeof(filter_node)) && p_scan_result->rssi > -42)
+        	// ----- The Node Device is Found, add the proccess to found NODEL BSL -----
+        	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
         	{
-        		//WICED_BT_TRACE("FIND NODE RSSI:%d\r\n", p_scan_result->rssi);
+        		/* Processes to disvocer a luminary whit close RSSI */
+        		Conect_process1(p_scan_result);
 
         		find_node = WICED_TRUE;
         		start_node_timer();
+
 
         		// Start a timer to blinking the LED, one Time
         		if(!blinking_led_timer)
@@ -181,6 +185,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	/** ------------------------- Filters to connect at the network ------------------------- */
     	else
     	{
+    		WICED_BT_TRACE("\n ----> \n");
     		p_uid_beacon = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &len );
     		// Return the function if doesn't information to Scan
     		if(p_uid_beacon == NULL)

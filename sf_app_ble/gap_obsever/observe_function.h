@@ -53,7 +53,8 @@ uint8_t		filter_lamp[] = 		{ 0x4c, 0x34, 0x53, 0x45, 0x43, 0x20, 0x42, 0x53, 0x4
 uint8_t		filter_tag[] = 			{ 0x4c, 0x41, 0x49, 0x52, 0x44, 0x20, 0x42, 0x4c };			// LAIRD BL
 
 /** Variable to find node device */
-uint8_t		filter_node[] = 		{ 0x4e, 0x4f, 0x44, 0x45, 0x42, 0x20, 0x42, 0x53, 0x4c };	// NODEB BSL
+uint8_t		filter_node[5] = 		{ 0x4e, 0x4f, 0x44, 0x45, 0x4C};	// NODEL BSL
+uint8_t NODEL_BSL1[5]  = {0x4E,0x4F,0x44,0x45,0x4C};   //NODEL
 
 /** Variable to find mesh connection */
 uint8_t		filter_mesh_conn[] = 	{ 0x43, 0x4f, 0x4e };										// CON
@@ -100,6 +101,7 @@ extern void start_node_timer(void);
 extern void start_bled_timer(void);
 
 extern void copy_info_net(uint8_t *p_info_net);
+extern void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
 
 //extern             void start_trOTA(uint32_t t_clk);
 

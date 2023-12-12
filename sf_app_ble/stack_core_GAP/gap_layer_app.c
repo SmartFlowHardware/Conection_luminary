@@ -672,8 +672,47 @@ void gap_rebroadcastLR(int8_t slt)
 
 	    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
 	}
-}
 
+}
+/*************   Start advertisement whith the MAC of the device to conect for start the conection *******************/
+void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres)
+{
+	uint8_t uid_mac[6]={0,0,0,0,0,0,};
+	memcpy(uid_mac,mac_addres, 6);
+
+	WICED_BT_TRACE("\n MAC EN UID %d\n", uid_mac);
+
+	uint8_t adv_data_uid[31];
+	uint8_t adv_len_uid = 0;
+
+	/* Set sample values for Eddystone UID*/
+	uint8_t eddystone_ranging_data = 0xf0;
+	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = { 1,2,3,4,5,6,7,8,9,0 };
+	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { uid_mac[0],uid_mac[1],uid_mac[2],uid_mac[3],uid_mac[4],uid_mac[5]};
+
+	memset(adv_data_uid, 0, 31);
+
+	 /* Call Eddystone UID api to prepare adv data*/
+	wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data, eddystone_namespace, eddystone_instance, adv_data_uid, &adv_len_uid);
+
+	/* Sets adv data for multi adv instance*/
+	wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
+
+
+	/* Start Eddystone UID advertisements */
+	adv_param.adv_int_min = 320; // 200 ms
+	adv_param.adv_int_max = 320;
+	#if defined(CYW20835B1) || defined(CYW20819A1) || defined(CYW20719B2) || defined(CYW20721B2) || defined (WICEDX) || defined(CYW55572) || defined(CYW43022C1)
+		wiced_set_multi_advertisement_params(BEACON_EDDYSTONE_UID, &adv_param);
+	#else
+	    wiced_set_multi_advertisement_params(adv_param.adv_int_min, adv_param.adv_int_max, adv_param.adv_type,
+	    adv_param.own_addr_type, adv_param.own_bd_addr, adv_param.peer_addr_type, adv_param.peer_bd_addr,
+	    adv_param.channel_map, adv_param.adv_filter_policy,
+	    BEACON_EDDYSTONE_UID, adv_param.adv_tx_power);
+	#endif
+
+	    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
+}
 
 /************************************************************************************************************************************
  * Function Name: stop_rbdkst(void)

@@ -18,7 +18,7 @@
 #include "malloc.h"
 #include "mesh_definitions.h"
 #include "init_mesh.h"
-
+#include <string.h>
 
 
 void prepare_network_info(const mesh_node_t *node, uint8_t *inf_network)
@@ -191,4 +191,72 @@ char* transmit_node_data(mesh_node_t node, char* user_prefix)
 
     // Returns the generated string
     return result;
+}
+
+/* Procces od conetion */
+base_data data_base[10];
+
+void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
+{
+	//WICED_BT_TRACE("\n -------------> \n");
+	//WICED_BT_TRACE("\n Mac : %B RSSI: %d \n",p_scan_result->remote_bd_addr,p_scan_result->rssi);
+	/* ************** Primer saber si ya tengo guardada la mac que he visto *************** */
+	safe_macs=0;
+	for(int i=0; i<SIZE;i++)
+	{
+		if(memcmp(data_base[i].bdaddr_luminary,p_scan_result->remote_bd_addr,6)==0 && p_scan_result->remote_bd_addr[0] != 0 && p_scan_result->remote_bd_addr[1] != 0 && p_scan_result->remote_bd_addr[2] != 0)     /* Primero saber si ya tengo la mac, si la tengo renuevo su RSSI y si su RSSI ha aumentado, si lo ha hecho  */
+		{
+			data_base[i].rssi= p_scan_result->rssi;   //Actualizo su vaor de RSSI
+			safe_macs=1;  /* flag to know if I already have this mac saved */
+		}
+	}
+	/* ********************************************************************************* */
+
+	/* ******************** Si no tengo la mac acomodar en un espacio disponible******** */
+	if(safe_macs == 0)	 /* Nunca entro, no tengo esta mac guardada en mi arreglo, ademas voy a ver si ya estoy lleno */
+	{
+		//if(strlen(array_mac) <10)   /* If it is 5 the array is full */
+		//{
+			for(int i=0; i<SIZE;i++)
+			{
+				if(array_mac[i] == 0)  /* Si vale cero, aqui guardare la nueva mac  */
+				{
+					memcpy(data_base[i].bdaddr_luminary,p_scan_result->remote_bd_addr,6);
+					data_base[i].rssi= p_scan_result->rssi;
+					array_mac[i]=1;                                             /* Mac guaedada en la posicion i */
+					break;
+				}
+			}
+		//}
+	}
+
+
+	for(int i=0; i<SIZE;i++)   // 0 -5 0 -2 -3    quitadno espacios solos
+	{
+		if(array_mac[i] == 0 && array_mac[i+1] !=0)
+		{
+			memcpy(data_base[i].bdaddr_luminary,data_base[i+1].bdaddr_luminary,6);
+			memset(data_base[i+1].bdaddr_luminary,'\0',6); /* limpio */
+			data_base[i].rssi=data_base[i+1].rssi;
+			data_base[i+1].rssi=0;		                 /* limpio */
+
+			array_mac[i+1]=0;
+			array_mac[i]=1;                   /* En el actual ya tengo algo */
+		}
+	}
+	WICED_BT_TRACE("\n Macs vistas \n");
+	for(int i=0; i<SIZE;i++)
+	{
+		WICED_BT_TRACE("\n [%d] %B \n",i,data_base[i].bdaddr_luminary);   /* NODEL BSL */
+	}
+	/* Inicio proceso de conexion, bandera para preguntar solo una vez una bandera */
+	for(int i= 0; i<10;i++)
+	{
+		if(array_mac[i]==1 && conection_status[i]==0 && status_flag==WICED_FALSE)   /* Tengo una MAC guardada en esta posicion, y ademas no tengo una conexion en ese lugar, nicia conexion */
+		{
+			beacon_set_eddystone_uid_advertisement_data_1(data_base[i].bdaddr_luminary);
+			status_flag=WICED_TRUE;
+		}
+	}
+
 }

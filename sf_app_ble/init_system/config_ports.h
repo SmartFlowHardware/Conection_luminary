@@ -15,15 +15,15 @@
 
 /** Buttons for device */
 //#define PORT_INT0			WICED_P26
-#define PORT_INT_ACUSE		WICED_P25//WICED_P07
-#define PORT_INT_ON_OFF		WICED_P17//WICED_P10
+#define PORT_INT_ACUSE		WICED_P25//WICED_P07  bengala
+#define PORT_INT_ON_OFF		WICED_P17//WICED_P10  bengala
 
 /** LEDs for device */
 #define LED_PIN_GREEN		WICED_P00
 #define LED_PIN_BLUE		WICED_P01
 #define LED_PIN_RED			WICED_P02
 #define LED_CHARGE			WICED_P26
-#define LED_CONECTION		WICED_P16//WICED_P28
+#define LED_CONECTION		WICED_P16//WICED_P28  bengala
 #define LED_WARNING			WICED_P29
 #define LED_VEHICLE			WICED_P34
 #define LED_PERSON			WICED_P38
