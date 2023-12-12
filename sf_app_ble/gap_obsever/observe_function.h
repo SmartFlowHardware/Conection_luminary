@@ -44,15 +44,22 @@ wiced_bool_t	find_tag;
 wiced_bool_t	find_node;
 wiced_bool_t	conn_node_mesh;
 
-/** Variables to identify the type of Name */
-uint8_t		filter_lamp[] = { 0x4c, 0x34, 0x53, 0x45, 0x43, 0x20, 0x42, 0x53, 0x4c };	// L4SEC BSL
-uint8_t		filter_tag[] = { 0x4c, 0x41, 0x49, 0x52, 0x44, 0x20, 0x42, 0x4c };			// LAIRD BL
-uint8_t		filter_node[] = { 0x4e, 0x4f, 0x44, 0x45, 0x42, 0x20, 0x42, 0x53, 0x4c };	// NODEB BSL
-uint8_t		filter_mesh_conn[] = { 0x43, 0x4f, 0x4e };									// CON
-uint8_t		filter_node_rsp[] = { 0x43, 0x4e };											// CN
+/** --- Variables to identify the type of Name --- */
 
-/** Variable to identify the device class (Node unprovisioned) */
-uint8_t		filter_node_dev[] = { 0x4e, 0x44, 0x4c };	// NDL (Node not provisioned)
+/** Variable to find lamp device */
+uint8_t		filter_lamp[] = 		{ 0x4c, 0x34, 0x53, 0x45, 0x43, 0x20, 0x42, 0x53, 0x4c };	// L4SEC BSL
+
+/** Variable to find tag device */
+uint8_t		filter_tag[] = 			{ 0x4c, 0x41, 0x49, 0x52, 0x44, 0x20, 0x42, 0x4c };			// LAIRD BL
+
+/** Variable to find node device */
+uint8_t		filter_node[] = 		{ 0x4e, 0x4f, 0x44, 0x45, 0x42, 0x20, 0x42, 0x53, 0x4c };	// NODEB BSL
+
+/** Variable to find mesh connection */
+uint8_t		filter_mesh_conn[] = 	{ 0x43, 0x4f, 0x4e };										// CON
+
+/** Variable to find node response */
+uint8_t		filter_node_rsp[] = 	{ 0x43, 0x4e };												// CN
 
 //uint8_t		filter_node_lamp[] = { 0x01, 0x00, 0x00 };
 
