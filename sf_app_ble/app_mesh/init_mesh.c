@@ -105,15 +105,15 @@ void copy_info_net(uint8_t *p_info_net)
 
 	// Filter to ask to connect
 	info_mesh.message_conn[0] = ' ';	// Space empty
-	info_mesh.message_conn[1] = 'C';	// C
-	info_mesh.message_conn[2] = 'N';	// Something
+	info_mesh.message_conn[1] = 'C';	// C - Filter to ask to join at the Network
+	info_mesh.message_conn[2] = 'N';	// N - Filter to ask to join at the Network
 	info_mesh.message_conn[3] = info_mesh.addr;
 
 	WICED_BT_TRACE("Info Net | addr:%x | max_dst:%x | NKey: %02X %02X %02X\r\n", info_mesh.addr, info_mesh.max_dst, info_mesh.net_key[0], info_mesh.net_key[1], info_mesh.net_key[2]);
 	WICED_BT_TRACE_ARRAY(info_mesh.message_conn, 8, "Message Connection: ");
 
 	// Change the advertisement
-	gap_rebroadcastLR(0);
+	gap_rebroadcastLR(NODE_ADV);
 }
 
 

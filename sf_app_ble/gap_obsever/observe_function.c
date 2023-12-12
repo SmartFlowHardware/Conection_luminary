@@ -123,12 +123,6 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 //    		}
         }
 
-//    	if( p_mesh_beacon )
-//    	{
-//    		WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
-//    		WICED_BT_TRACE_ARRAY(p_mesh_beacon, length_scan_beacon, "Beacon Message: ");
-//    	}
-//
 //    	WICED_BT_TRACE("RSSI: %d\t", p_scan_result->rssi);
 //    	WICED_BT_TRACE_ARRAY(p_adv_data, 21, "Advertisement Package: ");
 
@@ -176,7 +170,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         		start_node_timer();
 
         		// Start a timer to blinking the LED, one Time
-        		if( !blinking_led_timer )
+        		if(!blinking_led_timer)
         		{
         			start_bled_timer();
         			blinking_led_timer = WICED_TRUE;
@@ -198,17 +192,16 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         	// Message to "connect" at Mesh
         	if(!memcmp(filter_mesh_conn, p_uid_beacon, sizeof(filter_mesh_conn)))
         	{
-        		WICED_BT_TRACE("----- Connect -----\r\n");
+        		WICED_BT_TRACE("----- Beacon Message to connect at Mesh -----\r\n");
         		p_uid_beacon = &p_uid_beacon[3];
+
         		// Copy the information of the net
-        		if( !conn_node_mesh)
+        		if( !conn_node_mesh )
         		{
         			conn_node_mesh = WICED_TRUE;
         			copy_info_net(p_uid_beacon);
         		}
         	}
-
-
 
     		// Response to be part at the Network
 //    		if(!memcmp(mesh_conn_class, p_device_class, sizeof(mesh_conn_class)))
