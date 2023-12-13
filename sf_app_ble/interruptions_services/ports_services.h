@@ -42,7 +42,8 @@ extern uint8_t	app_timer_button;
 extern wiced_bool_t	is_provisioned;
 extern wiced_bool_t find_node;
 extern wiced_bool_t	mode_send_info;
-
+extern mesh_info_t info_mesh;
+extern wiced_bool_t conn_node_mesh;
 
 
 /************************************************************************************************************************************

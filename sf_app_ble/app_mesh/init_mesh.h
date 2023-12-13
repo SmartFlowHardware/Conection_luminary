@@ -30,7 +30,7 @@ uint8_t addr[10];
 wiced_result_t         status_flag= WICED_FALSE;  /* Fla for only start one time the advertisement */
 
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
-extern void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres, uint8_t addr);
+extern void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response);
 
 typedef struct
 {

@@ -174,31 +174,29 @@ void button_cback_acuse( void *data, uint8_t port_pin )
     		}
 
     	}
-    	else if( ( ( app_timer_count - btn_push_tm_acuse ) <= TIME_PUSH_BUTTON_MIN ) )
+    	else if( ( ( app_timer_count - btn_push_tm_acuse ) <= TIME_PUSH_BUTTON_MIN ) )  /* Contestacion de 1 segundo donde vamos a reponder le conexion*/
     	{
             WICED_BT_TRACE( "Button released Before less than 2s, Change Advertisement\r\n");
 
             // Blinking the Led and increment the value of the counter
             wiced_hal_gpio_set_pin_output(LED_PERSON, !wiced_hal_gpio_get_pin_output(LED_PERSON));
 
-            if((node.addr == 1) && find_node)
+            if((node.addr == 1) && find_node) /* Central */
             {
             	WICED_BT_TRACE("Advertisement Connect Message Active\r\n");
 
             	// Start to transmit the "connect" message
             	mode_send_info = WICED_TRUE;
-            	gap_rebroadcastLR(BEACON_INFO_MESH_UID_ADV);
+            	gap_rebroadcastLR(BEACON_INFO_MESH_UID_ADV,0);
             }
-            else if((node.addr == 1) && !find_node)
-            {
-            	WICED_BT_TRACE("Advertisement Connect Message Not Active\r\n");
 
-            	// There is not a Node to connect to the Network
-            	mode_send_info = WICED_FALSE;
-            	//gap_rebroadcastLR(1);
-            }
+    	}  //true in observe
+    	if(   conn_node_mesh    == WICED_TRUE && is_provisioned == WICED_FALSE)  /* Respuesta de conexion ****************/
+    	{
+    		//gap_rebroadcastLR(NODE_ADV,info_mesh.addr); /* Send response */
+    																    /* Response UID */
+    		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         );  //*****************************************-----------------
     	}
-
     	btn_push_tm_acuse = 0; 						// Reset the time of button after process the event
     	lst_btn_evt_time_acuse = current_time_acuse;
 	}

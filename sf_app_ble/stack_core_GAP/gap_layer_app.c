@@ -557,7 +557,7 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 {
 	WICED_BT_TRACE("[%s] | Event:%d\r\n", __FUNCTION__, slt);
 	/* Set sample values for Eddystone UID*/
-	uint8_t eddystone_ranging_data = 0xf0;                     // C      N  node
+	uint8_t eddystone_ranging_data = 0xf0;                     		// C      N  node
 	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];//; = { 0x43, 0x4E,addr,0,0,0,0,0,0,0 };
 	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];//; = { 0,1,2,3,4,5 };
 	uint16_t time_send_data; //960; // 600 ms
@@ -579,10 +579,13 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 
 			/* Configure Advertisement */
 			node_set_app_advertisement_data();
-			//app_set_scan_response_data();
 
-			/* Restart the advertisements */
-			//wiced_bt_start_advertisements( BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL );
+			/* Proccess to change the UID*/
+//									// C      N  node
+//			eddystone_namespace[] = { 0x43, 0x4E,addr,0,0,0,0,0,0,0 };
+//			eddystone_instance[] = { 0,1,2,3,4,5 };
+			//Function to send the UID
+			//beacon_set_eddystone_uid_advertisement_data_1();
 	        break;
 
 		case MESH_ADV:
@@ -678,20 +681,42 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 
 }
 /*************   Start advertisement whith the MAC and addr, the central found the nodes to conect *******************/
-void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres,uint8_t addr)
+void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response)
 {
-	uint8_t uid_mac[6]={0,0,0,0,0,0,}, NET[3]={0x4E, 0x45, 0x54};
-		memcpy(uid_mac,mac_addres, 6);
-
-		WICED_BT_TRACE("\n MAC EN UID %d\n", uid_mac);
+	uint8_t NET[3]={0x4E, 0x45, 0x54};
+	uint8_t CN[2]={0x43,0x4E};
 
 		uint8_t adv_data_uid[31];
 		uint8_t adv_len_uid = 0;
 
 		/* Set sample values for Eddystone UID*/
 		uint8_t eddystone_ranging_data = 0xf0;
-		uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = { uid_mac[0],uid_mac[1],uid_mac[2],uid_mac[3],uid_mac[4],uid_mac[5],NET[0],NET[1],NET[2],addr};
-		uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
+		uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];// = {NET[0],NET[1],NET[2],addr,0,0,0,0,0,0};
+		uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];// = { 0,0,0,0,0,0};
+		uint8_t hola[5];
+
+		memset(eddystone_namespace, 0, 10);
+		memset(eddystone_instance, 0, 10);
+
+		wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
+
+		switch(response)
+		{
+		case 0:
+			memcpy(eddystone_namespace,NET, sizeof(NET));
+			eddystone_namespace[3]=addr1;
+			//eddystone_namespace = {NET[0],NET[1],NET[2],addr1,0,0,0,0,0,0};
+			//eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
+			break;
+		case 1:
+			WICED_BT_TRACE("\n ********* Sen RESPONSE ********* \n");
+			memcpy(eddystone_namespace,CN, sizeof(CN));
+			eddystone_namespace[2]=addr1;
+//									//  C    N
+//			eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = {0x43,0x4E,addr,0,0,0,0,0,0,0};
+//			eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
+			break;
+		}
 
 		memset(adv_data_uid, 0, 31);
 
