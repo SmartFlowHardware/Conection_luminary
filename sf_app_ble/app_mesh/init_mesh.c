@@ -89,31 +89,34 @@ void create_network(void)
     	prepare_network_info(&node, inf_network);
 
     	// Change the advertisement
-    	gap_rebroadcastLR(MESH_ADV);
+    	gap_rebroadcastLR(MESH_ADV, 0);  /*    ******* i add 0 */
     }
 }
 
 
 void copy_info_net(uint8_t *p_info_net)
 {
-	WICED_BT_TRACE_ARRAY(p_info_net, 8, "Info Net: ");
+	WICED_BT_TRACE_ARRAY(p_info_net, 14, "Info Net: ");
 
 	// Save the information on a structure
-	info_mesh.addr    = p_info_net[2];
-	info_mesh.max_dst = p_info_net[3];
-	memcpy(info_mesh.net_key, p_info_net + 4, sizeof(info_mesh.net_key));
+	info_mesh.addr    = p_info_net[13];
+	WICED_BT_TRACE("\n 1 Addres%d \n",info_mesh.addr);
+	info_mesh.max_dst = EMBEDDED_PROV_HOPS;
+	WICED_BT_TRACE("\n 2 Max_dist%d \n",info_mesh.max_dst);
+	memcpy(info_mesh.net_key, p_info_net + 10, 3);
+	WICED_BT_TRACE("\n %B \n",info_mesh.net_key);
 
 	// Filter to ask to connect
 	info_mesh.message_conn[0] = ' ';	// Space empty
 	info_mesh.message_conn[1] = 'C';	// C - Filter to ask to join at the Network
 	info_mesh.message_conn[2] = 'N';	// N - Filter to ask to join at the Network
-	info_mesh.message_conn[3] = info_mesh.addr;
+	info_mesh.message_conn[3] = info_mesh.addr; // Asigned the number of the node
 
 	WICED_BT_TRACE("Info Net | addr:%x | max_dst:%x | NKey: %02X %02X %02X\r\n", info_mesh.addr, info_mesh.max_dst, info_mesh.net_key[0], info_mesh.net_key[1], info_mesh.net_key[2]);
-	WICED_BT_TRACE_ARRAY(info_mesh.message_conn, 8, "Message Connection: ");
+//	WICED_BT_TRACE_ARRAY(info_mesh.message_conn, 8, "Message Connection: ");
 
 	// Change the advertisement
-	gap_rebroadcastLR(NODE_ADV);
+	gap_rebroadcastLR(NODE_ADV,info_mesh.addr);
 }
 
 
@@ -135,7 +138,7 @@ void mesh_app_factory_reset(void)
     }
 
     // Change the advertisement
-    gap_rebroadcastLR(0);
+    gap_rebroadcastLR(0,0);         /******* i add 0 */
 }
 
 
@@ -194,12 +197,10 @@ char* transmit_node_data(mesh_node_t node, char* user_prefix)
 }
 
 /* Procces od conetion */
-base_data data_base[10];
+base_data data_base[SIZE];
 
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 {
-	//WICED_BT_TRACE("\n -------------> \n");
-	//WICED_BT_TRACE("\n Mac : %B RSSI: %d \n",p_scan_result->remote_bd_addr,p_scan_result->rssi);
 	/* ************** Primer saber si ya tengo guardada la mac que he visto *************** */
 	safe_macs=0;
 	for(int i=0; i<SIZE;i++)
@@ -215,8 +216,6 @@ void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 	/* ******************** Si no tengo la mac acomodar en un espacio disponible******** */
 	if(safe_macs == 0)	 /* Nunca entro, no tengo esta mac guardada en mi arreglo, ademas voy a ver si ya estoy lleno */
 	{
-		//if(strlen(array_mac) <10)   /* If it is 5 the array is full */
-		//{
 			for(int i=0; i<SIZE;i++)
 			{
 				if(array_mac[i] == 0)  /* Si vale cero, aqui guardare la nueva mac  */
@@ -224,10 +223,10 @@ void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 					memcpy(data_base[i].bdaddr_luminary,p_scan_result->remote_bd_addr,6);
 					data_base[i].rssi= p_scan_result->rssi;
 					array_mac[i]=1;                                             /* Mac guaedada en la posicion i */
+					data_base[i].conection_status = 0;  /* init process conection */
 					break;
 				}
 			}
-		//}
 	}
 
 
@@ -244,18 +243,24 @@ void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 			array_mac[i]=1;                   /* En el actual ya tengo algo */
 		}
 	}
-	WICED_BT_TRACE("\n Macs vistas \n");
+	WICED_BT_TRACE("\n Macs vistas \n");  /* Esto no va necesariamente */
 	for(int i=0; i<SIZE;i++)
 	{
 		WICED_BT_TRACE("\n [%d] %B \n",i,data_base[i].bdaddr_luminary);   /* NODEL BSL */
 	}
+
+	static uint8_t addr1 = 2;
 	/* Inicio proceso de conexion, bandera para preguntar solo una vez una bandera */
-	for(int i= 0; i<10;i++)
-	{
-		if(array_mac[i]==1 && conection_status[i]==0 && status_flag==WICED_FALSE)   /* Tengo una MAC guardada en esta posicion, y ademas no tengo una conexion en ese lugar, nicia conexion */
+	for(int i= 0; i<SIZE;i++)
+	{	   /* Si hay algo */
+		if(array_mac[i]==1 && data_base[i].conection_status == 0 && status_flag==WICED_FALSE)   /* Tengo una MAC guardada en esta posicion, y ademas no tengo una conexion en ese lugar, nicia conexion */
 		{
-			beacon_set_eddystone_uid_advertisement_data_1(data_base[i].bdaddr_luminary);
-			status_flag=WICED_TRUE;
+			status_flag=WICED_TRUE;  /* start advertisements ones */
+			data_base[i].addr=addr1;
+			beacon_set_eddystone_uid_advertisement_data_1(data_base[i].bdaddr_luminary, addr1);
+			addr1 ++;   /* Asigned addres */
+			/* Si se logra realizar la conexion conection_status valdra 1, si no se completa valdra 0 y despues de un rato se borrara para iniciar otra conección */
+			break;
 		}
 	}
 

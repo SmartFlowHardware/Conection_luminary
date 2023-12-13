@@ -68,7 +68,7 @@ void start_observe(void)
 }
 
 
-
+extern wiced_bt_device_address_t bda;
 /************************************************************************************************************************************
  * Function Name: observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8_t *p_adv_data )
  * ----------------------------------------------------------------------------------------------------------------------------------
@@ -88,10 +88,11 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 	uint8_t			*p_device_class;	// Pointer to data fot searched information in the advertisement package
 	uint8_t			*p_mesh_beacon;
 	uint8_t			*p_uid_beacon;
+	uint8_t			*p_uid_edystone=NULL;
 	uint8_t			length_scan;		// Variable to store the length of the parameter being searched for the function in the advertisement
 	uint8_t			length_scan_node;	// Variable to store the length of the parameter being searched for the function in the advertisement
 	uint8_t			length_scan_beacon;
-	uint8_t			len;
+	uint8_t			len, lengthmac=0;
 	uint16_t                	service_uuid16 = 0;	// Variable assistant to convert a uint16_t value
 
 	uint8_t *p_name=NULL;    //
@@ -167,11 +168,9 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
         	{
         		/* Processes to disvocer a luminary whit close RSSI */
-        		Conect_process1(p_scan_result);
-
+        		Conect_process1(p_scan_result);  /* *************** */
         		find_node = WICED_TRUE;
         		start_node_timer();
-
 
         		// Start a timer to blinking the LED, one Time
         		if(!blinking_led_timer)
@@ -182,31 +181,43 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 
         	}
     	}
-    	/** ------------------------- Filters to connect at the network ------------------------- */
+    	/** ------------------------- Filters to connect at the network *Procces of the no central to conect with the central------------------------- */
     	else
     	{
-    		WICED_BT_TRACE("\n ----> \n");
-    		p_uid_beacon = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &len );
-    		// Return the function if doesn't information to Scan
-    		if(p_uid_beacon == NULL)
-    			return;
+    		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
+    		if(p_uid_edystone != NULL)
+    		{
+    			if(memcmp(bda,&p_uid_edystone[4],6) == 0 && memcmp(KEY,&p_uid_edystone[10],3)==0)
+    			{
+    				WICED_BT_TRACE("\n I Found my own mac:%B \n",&p_uid_edystone[4]);
+    				WICED_BT_TRACE_ARRAY(p_uid_edystone, 16, "Beacon UID: ");
 
-    		p_uid_beacon = &p_uid_beacon[4];
-    		WICED_BT_TRACE_ARRAY(p_uid_beacon, 16, "Beacon UID: ");
+    				// Copy the information of the net
+    				if( !conn_node_mesh )
+    				{
+    					WICED_BT_TRACE("\n Copy the information of the net \n");
+    					conn_node_mesh = WICED_TRUE;
+    					copy_info_net(p_uid_edystone);   //*************
+    				}
+    			}
+    		}
+
+//    		p_uid_beacon = &p_uid_beacon[4];
+//    		WICED_BT_TRACE_ARRAY(p_uid_beacon, 16, "Beacon UID: ");
 
         	// Message to "connect" at Mesh
-        	if(!memcmp(filter_mesh_conn, p_uid_beacon, sizeof(filter_mesh_conn)))
-        	{
-        		WICED_BT_TRACE("----- Beacon Message to connect at Mesh -----\r\n");
-        		p_uid_beacon = &p_uid_beacon[3];
-
-        		// Copy the information of the net
-        		if( !conn_node_mesh )
-        		{
-        			conn_node_mesh = WICED_TRUE;
-        			copy_info_net(p_uid_beacon);
-        		}
-        	}
+//        	if(!memcmp(filter_mesh_conn, p_uid_beacon, sizeof(filter_mesh_conn)))
+//        	{
+//        		WICED_BT_TRACE("----- Beacon Message to connect at Mesh -----\r\n");
+//        		p_uid_beacon = &p_uid_beacon[3];
+//
+//        		// Copy the information of the net
+//        		if( !conn_node_mesh )
+//        		{
+//        			conn_node_mesh = WICED_TRUE;
+//        			copy_info_net(p_uid_beacon);   //*************
+//        		}
+//        	}
 
     		// Response to be part at the Network
 //    		if(!memcmp(mesh_conn_class, p_device_class, sizeof(mesh_conn_class)))

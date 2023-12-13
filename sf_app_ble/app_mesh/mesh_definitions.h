@@ -26,10 +26,10 @@ typedef struct
 
 typedef struct
 {
-	uint8_t		addr;
-	uint8_t		max_dst;
-	uint8_t		net_key[3];
-	uint8_t		message_conn[10];
+	uint8_t		addr;        		/* Safe mac  */   /*2   NET   MAC*/
+	uint8_t		max_dst;     		/* How many device will turn on, in this example are 2 device in each side of the central */
+	uint8_t		net_key[3];			/* Safe key  */  /* NET */
+	uint8_t		message_conn[10];	/* Mesage to send for confirm the message */
 } mesh_info_t;
 
 

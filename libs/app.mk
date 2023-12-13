@@ -4,74 +4,74 @@
 # the next time 'make getlibs' is run.
 #
 bsp-assistant:
-	(cd OTA_Upgrade_Mesh; make bsp-assistant)
+	(cd BENGALA; make bsp-assistant)
 .PHONY: bsp-assistant
 
 config_bt:
-	(cd OTA_Upgrade_Mesh; make config_bt)
+	(cd BENGALA; make config_bt)
 .PHONY: config_bt
 
 bt-configurator:
-	(cd OTA_Upgrade_Mesh; make bt-configurator)
+	(cd BENGALA; make bt-configurator)
 .PHONY: bt-configurator
 
 capsense-configurator:
-	(cd OTA_Upgrade_Mesh; make capsense-configurator)
+	(cd BENGALA; make capsense-configurator)
 .PHONY: capsense-configurator
 
 capsense-tuner:
-	(cd OTA_Upgrade_Mesh; make capsense-tuner)
+	(cd BENGALA; make capsense-tuner)
 .PHONY: capsense-tuner
 
 config:
-	(cd OTA_Upgrade_Mesh; make config)
+	(cd BENGALA; make config)
 .PHONY: config
 
 device-configurator:
-	(cd OTA_Upgrade_Mesh; make device-configurator)
+	(cd BENGALA; make device-configurator)
 .PHONY: device-configurator
 
 config_ezpd:
-	(cd OTA_Upgrade_Mesh; make config_ezpd)
+	(cd BENGALA; make config_ezpd)
 .PHONY: config_ezpd
 
 ez-pd-configurator:
-	(cd OTA_Upgrade_Mesh; make ez-pd-configurator)
+	(cd BENGALA; make ez-pd-configurator)
 .PHONY: ez-pd-configurator
 
 modlibs:
-	(cd OTA_Upgrade_Mesh; make modlibs)
+	(cd BENGALA; make modlibs)
 .PHONY: modlibs
 
 library-manager:
-	(cd OTA_Upgrade_Mesh; make library-manager)
+	(cd BENGALA; make library-manager)
 .PHONY: library-manager
 
 config_lin:
-	(cd OTA_Upgrade_Mesh; make config_lin)
+	(cd BENGALA; make config_lin)
 .PHONY: config_lin
 
 lin-configurator:
-	(cd OTA_Upgrade_Mesh; make lin-configurator)
+	(cd BENGALA; make lin-configurator)
 .PHONY: lin-configurator
 
 qspi-configurator:
-	(cd OTA_Upgrade_Mesh; make qspi-configurator)
+	(cd BENGALA; make qspi-configurator)
 .PHONY: qspi-configurator
 
 seglcd-configurator:
-	(cd OTA_Upgrade_Mesh; make seglcd-configurator)
+	(cd BENGALA; make seglcd-configurator)
 .PHONY: seglcd-configurator
 
 smartio-configurator:
-	(cd OTA_Upgrade_Mesh; make smartio-configurator)
+	(cd BENGALA; make smartio-configurator)
 .PHONY: smartio-configurator
 
 config_usbdev:
-	(cd OTA_Upgrade_Mesh; make config_usbdev)
+	(cd BENGALA; make config_usbdev)
 .PHONY: config_usbdev
 
 usbdev-configurator:
-	(cd OTA_Upgrade_Mesh; make usbdev-configurator)
+	(cd BENGALA; make usbdev-configurator)
 .PHONY: usbdev-configurator
 

@@ -204,7 +204,7 @@ void init_config_logs(void)
 	 }
 }
 
-
+wiced_bt_device_address_t bda;
 /************************************************************************************************************************************
  * Function Name: init_mac_logs(void)
  * ----------------------------------------------------------------------------------------------------------------------------------
@@ -217,7 +217,7 @@ void init_mac_logs(void)
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-	wiced_bt_device_address_t bda;
+	//wiced_bt_device_address_t bda;
 
 	// Read data from NVRAM starting at address WICED_NVRAM_VSID_START+X, store in flagX variable
 	numbytes4 = wiced_hal_read_nvram(WICED_NVRAM_VSID_START + 3, sizeof(save_MAC), &save_MAC, &status4);

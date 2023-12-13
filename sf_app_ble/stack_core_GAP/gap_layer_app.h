@@ -115,13 +115,13 @@ void							app_set_scan_response_data(void);
 
 void                            stop_rbdkst(void);
 
-void                            gap_rebroadcastLR(int8_t slt);
+void                            gap_rebroadcastLR(int8_t slt,uint8_t addr);
 void							gap_rebroadcastURL(int8_t slt);
 void 							gap_rebroadcastBIO(uint8_t t_sensor, uint16_t data_device);
 
 static void 					beacon_set_eddystone_uid_advertisement_data(void);
 static void 					beacon_set_eddystone_ibeacon_advertisement_data();
-void                            beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres);
+void                            beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres, uint8_t addr);
 
 //void 					app_add_peer_info( uint16_t conn_id, uint8_t s_type, uint8_t* p_bd_addr );
 //wiced_bt_gatt_status_t 	app_connection_up(wiced_bt_gatt_connection_status_t *p_conn_status);

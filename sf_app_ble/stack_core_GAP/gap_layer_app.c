@@ -551,14 +551,15 @@ void app_set_scan_response_data( void )
 
 
 
-
-void gap_rebroadcastLR(int8_t slt)
+/*
+I convey that I already have the connection data and my assigned address */
+void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 {
 	WICED_BT_TRACE("[%s] | Event:%d\r\n", __FUNCTION__, slt);
 	/* Set sample values for Eddystone UID*/
-	uint8_t eddystone_ranging_data = 0xf0;
-	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];// = { 1,2,3,4,5,6,7,8,9,0 };
-	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];// = { 0,1,2,3,4,5 };
+	uint8_t eddystone_ranging_data = 0xf0;                     // C      N  node
+	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];//; = { 0x43, 0x4E,addr,0,0,0,0,0,0,0 };
+	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];//; = { 0,1,2,3,4,5 };
 	uint16_t time_send_data; //960; // 600 ms
 
 	// Length order
@@ -567,6 +568,7 @@ void gap_rebroadcastLR(int8_t slt)
 	switch( slt )
 	{
 		case NODE_ADV:
+			WICED_BT_TRACE("\n Entra en caso cuando vale 0 \n");
 			//wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
 			/* Advertising is off */
 			wiced_bt_start_advertisements( BTM_BLE_ADVERT_OFF, 0, NULL );
@@ -640,6 +642,7 @@ void gap_rebroadcastLR(int8_t slt)
 	// If the device is provisioned activate the Beacon UID
 	if( is_provisioned )
 	{
+		WICED_BT_TRACE("\n Provicionado es igual a TRUE \n");
 		WICED_BT_TRACE("Data_Txg1 ");
 		wiced_hal_puart_print(data_txsf);
 		WICED_BT_TRACE("\n");
@@ -674,34 +677,33 @@ void gap_rebroadcastLR(int8_t slt)
 	}
 
 }
-/*************   Start advertisement whith the MAC of the device to conect for start the conection *******************/
-void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres)
+/*************   Start advertisement whith the MAC and addr, the central found the nodes to conect *******************/
+void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres,uint8_t addr)
 {
-	uint8_t uid_mac[6]={0,0,0,0,0,0,};
-	memcpy(uid_mac,mac_addres, 6);
+	uint8_t uid_mac[6]={0,0,0,0,0,0,}, NET[3]={0x4E, 0x45, 0x54};
+		memcpy(uid_mac,mac_addres, 6);
 
-	WICED_BT_TRACE("\n MAC EN UID %d\n", uid_mac);
+		WICED_BT_TRACE("\n MAC EN UID %d\n", uid_mac);
 
-	uint8_t adv_data_uid[31];
-	uint8_t adv_len_uid = 0;
+		uint8_t adv_data_uid[31];
+		uint8_t adv_len_uid = 0;
 
-	/* Set sample values for Eddystone UID*/
-	uint8_t eddystone_ranging_data = 0xf0;
-	uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = { 1,2,3,4,5,6,7,8,9,0 };
-	uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { uid_mac[0],uid_mac[1],uid_mac[2],uid_mac[3],uid_mac[4],uid_mac[5]};
+		/* Set sample values for Eddystone UID*/
+		uint8_t eddystone_ranging_data = 0xf0;
+		uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = { uid_mac[0],uid_mac[1],uid_mac[2],uid_mac[3],uid_mac[4],uid_mac[5],NET[0],NET[1],NET[2],addr};
+		uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
 
-	memset(adv_data_uid, 0, 31);
+		memset(adv_data_uid, 0, 31);
 
-	 /* Call Eddystone UID api to prepare adv data*/
-	wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data, eddystone_namespace, eddystone_instance, adv_data_uid, &adv_len_uid);
+		/* Call Eddystone UID api to prepare adv data*/
+		wiced_bt_eddystone_set_data_for_uid(eddystone_ranging_data, eddystone_namespace, eddystone_instance, adv_data_uid, &adv_len_uid);
 
-	/* Sets adv data for multi adv instance*/
-	wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
-
+		/* Sets adv data for multi adv instance*/
+		wiced_set_multi_advertisement_data(adv_data_uid, adv_len_uid, BEACON_EDDYSTONE_UID);
 
 	/* Start Eddystone UID advertisements */
-	adv_param.adv_int_min = 320; // 200 ms
-	adv_param.adv_int_max = 320;
+	adv_param.adv_int_min = 200; // 200 ms
+	adv_param.adv_int_max = 200;
 	#if defined(CYW20835B1) || defined(CYW20819A1) || defined(CYW20719B2) || defined(CYW20721B2) || defined (WICEDX) || defined(CYW55572) || defined(CYW43022C1)
 		wiced_set_multi_advertisement_params(BEACON_EDDYSTONE_UID, &adv_param);
 	#else
@@ -724,7 +726,7 @@ void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres)
 void stop_rbdkst(void)
 {
 	 //node_set_app_advertisement_data();
-	 gap_rebroadcastLR(0);
+	 gap_rebroadcastLR(0,0);      /* ********* I add a 0 */
 	 WICED_BT_TRACE("CLEAR UUID\n");
 }
 

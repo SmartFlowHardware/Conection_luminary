@@ -16,6 +16,8 @@
 #define EMBEDDED_PROV_NODE_ADDR_FIRST		WICED_NVRAM_VSID_START + 100
 #define EMBEDDED_PROV_NODE_ADDR_LAST		(WICED_NVRAM_VSID_START + 100 + EMBEDDED_PROV_MAX_NODES)
 #define BBD_ADDR_LEN     		6  				/**< Bluetooth device address length */
+#define advertisement_central   0
+#define advertisement_nodo      1
 
 /* ------------ Variables used in the connection -------------- */
 #define SIZE 10
@@ -24,13 +26,16 @@
 
 uint8_t safe_macs, array_mac[SIZE];  /* Used for safe the status of the data full */
 uint8_t conection_status[10]={0,0,0,0,0,0,0,0,0,0};   /* Variable que se usará para el estatus de conexión */
+uint8_t addr[10];
 wiced_result_t         status_flag= WICED_FALSE;  /* Fla for only start one time the advertisement */
 
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
-extern void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres);
+extern void beacon_set_eddystone_uid_advertisement_data_1(BD_ADDR mac_addres, uint8_t addr);
 
 typedef struct
 {
+	uint8_t conection_status;
+	uint8_t addr;
 	BD_ADDR  bdaddr_luminary[6];
 	uint8_t rssi;
 }base_data;
@@ -57,7 +62,7 @@ uint8_t	inf_network[7];
 uint8_t copy_network[7];
 
 mesh_node_t node;
-mesh_info_t info_mesh;
+mesh_info_t info_mesh;   /*  My information of the red */
 
 
 extern wiced_bool_t	is_provisioned;
@@ -72,6 +77,6 @@ char*		transmit_node_data(mesh_node_t node, char* user_prefix);
 void self_configure(uint16_t node_addr);
 
 
-extern void gap_rebroadcastLR(int8_t slt);
+extern void gap_rebroadcastLR(int8_t slt, uint8_t addr);
 
 #endif /* SF_APP_BLE_APP_MESH_INIT_MESH_H_ */
