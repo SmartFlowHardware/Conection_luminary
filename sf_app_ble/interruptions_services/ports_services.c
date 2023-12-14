@@ -134,6 +134,8 @@ void button_cback_acuse( void *data, uint8_t port_pin )
 {
 	uint32_t current_time_acuse = app_timer_count * 500; 	// Convert to milliseconds
 
+
+	beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         );  //*****************************************-----------------
 	// Check if enough time has passed since the last event or the button was pressed one time
 	if ( ( (current_time_acuse - lst_btn_evt_time_acuse) < debounce_time_ms ) )
 	{
@@ -144,7 +146,8 @@ void button_cback_acuse( void *data, uint8_t port_pin )
 	WICED_BT_TRACE("[%s] app timer count:%d\n", __FUNCTION__, app_timer_count );
 
 	// Check if button is pressed
-	if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ACUSE ) == GPIO_PIN_OUTPUT_HIGH )
+	//if( wiced_hal_gpio_get_pin_input_status( PORT_INT_ACUSE ) == GPIO_PIN_OUTPUT_HIGH )
+	if( wiced_hal_gpio_get_pin_input_status(PORT_INT_ACUSE) == GPIO_PIN_OUTPUT_HIGH )   /* CYW920819EVB-02 */
 	{
         btn_push_tm_acuse = app_timer_count;
         WICED_BT_TRACE( "Button ACUSE pressed | btn_push_tm_acuse: %d\r\n", btn_push_tm_acuse );
@@ -193,9 +196,9 @@ void button_cback_acuse( void *data, uint8_t port_pin )
     	}  //true in observe
     	if(   conn_node_mesh    == WICED_TRUE && is_provisioned == WICED_FALSE)  /* Respuesta de conexion ****************/
     	{
-    		//gap_rebroadcastLR(NODE_ADV,info_mesh.addr); /* Send response */
+    		BD_ADDR  clean_bdress[6]= { 0, 0, 0, 0, 0, 0};
     																    /* Response UID */
-    		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         );  //*****************************************-----------------
+    		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         , clean_bdress);  //*****************************************-----------------
     	}
     	btn_push_tm_acuse = 0; 						// Reset the time of button after process the event
     	lst_btn_evt_time_acuse = current_time_acuse;

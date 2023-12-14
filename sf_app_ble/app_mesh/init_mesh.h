@@ -30,7 +30,7 @@ uint8_t addr[10];
 wiced_result_t         status_flag= WICED_FALSE;  /* Fla for only start one time the advertisement */
 
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
-extern void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response);
+extern void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary[]);
 
 typedef struct
 {
@@ -39,7 +39,7 @@ typedef struct
 	BD_ADDR  bdaddr_luminary[6];
 	uint8_t rssi;
 }base_data;
-/* ------------------------------------------------------------- */
+///* ------------------------------------------------------------- */
 
 //uint8_t cur_element_idx = 0;
 //uint8_t cur_model_idx = 0;
@@ -58,6 +58,7 @@ typedef struct
 ////    int8_t   	rssi_table[EMBEDDED_PROV_MAX_NODES];
 //} mesh_node_t;
 
+
 uint8_t	inf_network[7];
 uint8_t copy_network[7];
 
@@ -75,6 +76,17 @@ uint8_t		generate_random_number(void);
 char*		transmit_node_data(mesh_node_t node, char* user_prefix);
 //char* transmit_node_data(mesh_node_t node);
 void self_configure(uint16_t node_addr);
+
+extern void 				fill_data_base(wiced_bt_ble_scan_results_t *p_scan_result,uint8_t *p_uid_node);
+typedef struct
+{
+	uint8_t conection_status;
+	uint8_t addr;
+	BD_ADDR  bdaddr_luminary[6];
+	uint8_t rssi;
+}mesh_daba_base_t;
+
+mesh_daba_base_t mesh_data[10];
 
 
 extern void gap_rebroadcastLR(int8_t slt, uint8_t addr);

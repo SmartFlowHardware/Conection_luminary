@@ -681,18 +681,15 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 
 }
 /*************   Start advertisement whith the MAC and addr, the central found the nodes to conect *******************/
-void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response)
+void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary)
 {
-	uint8_t NET[3]={0x4E, 0x45, 0x54};
-	uint8_t CN[2]={0x43,0x4E};
-
 		uint8_t adv_data_uid[31];
 		uint8_t adv_len_uid = 0;
 
 		/* Set sample values for Eddystone UID*/
 		uint8_t eddystone_ranging_data = 0xf0;
 		uint8_t eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN];// = {NET[0],NET[1],NET[2],addr,0,0,0,0,0,0};
-		uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];// = { 0,0,0,0,0,0};
+		uint8_t eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN];
 		uint8_t hola[5];
 
 		memset(eddystone_namespace, 0, 10);
@@ -705,16 +702,16 @@ void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t respon
 		case 0:
 			memcpy(eddystone_namespace,NET, sizeof(NET));
 			eddystone_namespace[3]=addr1;
-			//eddystone_namespace = {NET[0],NET[1],NET[2],addr1,0,0,0,0,0,0};
-			//eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
 			break;
 		case 1:
 			WICED_BT_TRACE("\n ********* Sen RESPONSE ********* \n");
 			memcpy(eddystone_namespace,CN, sizeof(CN));
 			eddystone_namespace[2]=addr1;
-//									//  C    N
-//			eddystone_namespace[EDDYSTONE_UID_NAMESPACE_LEN] = {0x43,0x4E,addr,0,0,0,0,0,0,0};
-//			eddystone_instance[EDDYSTONE_UID_INSTANCE_ID_LEN] = { 0,0,0,0,0,0};
+			break;
+		case 2:
+			WICED_BT_TRACE("\n ********* Succes conection ********* \n");
+			memcpy(eddystone_namespace,bdaddr_luminary,6);
+
 			break;
 		}
 

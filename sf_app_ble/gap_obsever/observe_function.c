@@ -69,7 +69,8 @@ void start_observe(void)
 
 
 extern wiced_bt_device_address_t bda;
-wiced_bool_t conection_complet;
+//wiced_bool_t conection_complet;
+uint8_t conection_complet=0;
 /************************************************************************************************************************************
  * Function Name: observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8_t *p_adv_data )
  * ----------------------------------------------------------------------------------------------------------------------------------
@@ -90,9 +91,11 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
 	uint8_t			*p_mesh_beacon;
 	uint8_t			*p_uid_beacon;
 	uint8_t			*p_uid_edystone=NULL;
+	uint8_t 		*p_uid_node;        //Response of the UID of the node to conect
 	uint8_t			length_scan;		// Variable to store the length of the parameter being searched for the function in the advertisement
 	uint8_t			length_scan_node;	// Variable to store the length of the parameter being searched for the function in the advertisement
 	uint8_t			length_scan_beacon;
+	uint8_t			length_uid_node;
 	uint8_t			len, lengthmac=0;
 	uint16_t                	service_uuid16 = 0;	// Variable assistant to convert a uint16_t value
 
@@ -103,7 +106,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         return;
 
 
-    //WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+    //     WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
     /* --- Filters --- */
     if( p_scan_result && p_scan_result->rssi > -90)
     {
@@ -111,6 +114,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_NAME_COMPLETE, &length_scan );
     	p_device_class = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_DEV_CLASS, &length_scan_node );
     	p_mesh_beacon = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_MESH_BEACON, &length_scan_beacon );
+    	p_uid_node = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &length_uid_node );
 
     	p_uid_beacon = &p_adv_data[0];
 
@@ -137,12 +141,11 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         	// ----- The Node Device is Found, add the proccess to found NODEL BSL -----
         	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
         	{
-
         		/* Processes to disvocer a luminary whit close RSSI */
-        		if(conection_complet==WICED_FALSE)
+        		if(conection_complet==0)
         		{
         			Conect_process1(p_scan_result);  /* *************** */
-        			conection_complet=WICED_TRUE;
+        			conection_complet=1;
         		}
 
         		find_node = WICED_TRUE;
@@ -155,9 +158,13 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         			blinking_led_timer = WICED_TRUE;
         		}
         		//p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &length_scan );
-
         	}
-
+        	/* Id found the response of a device, safe all the indormation */
+        	if(memcmp(CN1, &p_uid_node[4],2)==0 && conection_complet==1)
+        	{
+              fill_data_base(p_scan_result, p_uid_node);
+              conection_complet = 2;
+        	}
     	}
     	/** ------------------------- Filters to connect at the network *Procces of the no central to conect with the central------------------------- */
     	else
@@ -165,7 +172,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
     		if(p_uid_edystone != NULL)
     		{
-    			if(memcmp(KEY,&p_uid_edystone[4],3)==0)  /* Enciendo */
+    			if(memcmp(KEY,&p_uid_edystone[4],3)==0)  /* Enciendo cuando  */
     			{
 //    				WICED_BT_TRACE("\n I Found my own mac:%B \n",&p_uid_edystone[4]);
 //    				WICED_BT_TRACE_ARRAY(p_uid_edystone, 16, "Beacon UID: ");
@@ -173,9 +180,10 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     				// Copy the information of the net
     				if( !conn_node_mesh )
     				{
+    					wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
     					WICED_BT_TRACE("\n Copy the information of the net \n");
     					copy_info_net(p_uid_edystone);   //*************  UID COMPLETO
-    					conn_node_mesh = WICED_TRUE;  /* Una vez que se le asigne que lo aga de nue false */
+    					conn_node_mesh = WICED_TRUE;  /* Variable to initialize ones the UID advertisement */
     				}
     			}
     		}

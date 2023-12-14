@@ -56,6 +56,7 @@ uint8_t		filter_tag[] = 			{ 0x4c, 0x41, 0x49, 0x52, 0x44, 0x20, 0x42, 0x4c };		
 uint8_t		filter_node[5] = 		{ 0x4e, 0x4f, 0x44, 0x45, 0x4C};	// NODEL BSL
 uint8_t NODEL_BSL1[5]  = {0x4E,0x4F,0x44,0x45,0x42};   //NODEB
 uint8_t KEY[3]={0x4E, 0x45, 0x54};       // NET
+uint8_t CN1[2]={0x43,0x4E};
 
 /** Variable to find mesh connection */
 uint8_t		filter_mesh_conn[] = 	{ 0x43, 0x4f, 0x4e };										// CON
@@ -117,8 +118,6 @@ void               	start_observe(void);
 void               	init_event_ADC(void);
 void               	init_event_RAC(void);
 void               	init_event_gap(void);
-
-
-
+void 				fill_data_base(wiced_bt_ble_scan_results_t *p_scan_result, uint8_t *p_uid_node);
 #endif /* SF_APP_BLE_GAP_OBSERVER_OBSERVE_FUNCTION_H_ */
 

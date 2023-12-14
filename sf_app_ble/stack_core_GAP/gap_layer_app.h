@@ -54,6 +54,10 @@ uint8_t mesh_conn_class[] = {0x43, 0x4f, 0x4e}; // CON
 
 uint8_t mesh_message[]={'H','E','L','L','O','\n'};;
 
+uint8_t NET[3]={0x4E, 0x45, 0x54}; //NET
+uint8_t CN[2]={0x43,0x4E};         //CN
+uint8_t GOOD= 0x47;
+
 
 /************************************************************************************************************************************
  *  Extern Variables
@@ -62,6 +66,7 @@ uint8_t mesh_message[]={'H','E','L','L','O','\n'};;
 extern const wiced_bt_cfg_settings_t app_cfg_settings2;
 extern const wiced_bt_cfg_buf_pool_t app_buf_pools2[];
 
+extern void config_clk_timers(void);
 extern mesh_node_t node;
 extern mesh_info_t info_mesh;
 extern uint8_t	inf_network[8];
@@ -121,7 +126,7 @@ void 							gap_rebroadcastBIO(uint8_t t_sensor, uint16_t data_device);
 
 static void 					beacon_set_eddystone_uid_advertisement_data(void);
 static void 					beacon_set_eddystone_ibeacon_advertisement_data();
-void                            beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response);
+void                            beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response,BD_ADDR  bdaddr_luminary);
 
 //void 					app_add_peer_info( uint16_t conn_id, uint8_t s_type, uint8_t* p_bd_addr );
 //wiced_bt_gatt_status_t 	app_connection_up(wiced_bt_gatt_connection_status_t *p_conn_status);
