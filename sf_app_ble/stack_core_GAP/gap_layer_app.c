@@ -527,6 +527,40 @@ void node_set_app_advertisement_data(void)
     WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", result);
 }
 
+void mesh_node_in_app_advertisement_data(void)
+{
+	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+
+	wiced_result_t         result;
+    wiced_bt_ble_advert_elem_t adv_elem[4];
+    uint8_t num_elem = 0;
+    uint8_t flag = BTM_BLE_GENERAL_DISCOVERABLE_FLAG | BTM_BLE_BREDR_NOT_SUPPORTED;
+
+    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_FLAG;
+    adv_elem[num_elem].len          = sizeof(uint8_t);
+    adv_elem[num_elem].p_data       = &flag;
+    num_elem++;
+
+    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_NAME_COMPLETE;
+    adv_elem[num_elem].len          = strlen((const char *)"IN NODE");
+    adv_elem[num_elem].p_data       = (uint8_t*)"IN NODE";
+    num_elem++;
+
+    adv_elem[num_elem].advert_type	= BTM_BLE_ADVERT_TYPE_DEV_CLASS;
+    adv_elem[num_elem].len			= sizeof(node.net_key_node);
+    adv_elem[num_elem].p_data		= node.net_key_node;
+    num_elem++;
+
+    adv_elem[num_elem].advert_type  = BTM_BLE_ADVERT_TYPE_MESH_BEACON;
+    adv_elem[num_elem].len          = sizeof(mesh_beacon);
+    adv_elem[num_elem].p_data       = mesh_beacon;
+    num_elem++;
+
+    wiced_bt_ble_set_raw_advertisement_data(num_elem, adv_elem);
+
+    result =  wiced_bt_start_advertisements(BTM_BLE_ADVERT_UNDIRECTED_HIGH, 0, NULL);
+    WICED_BT_TRACE("wiced_bt_start_advertisements %d\n", result);
+}
 
 
 /*******************************************************************************
@@ -680,6 +714,7 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 	}
 
 }
+
 /*************   Start advertisement whith the MAC and addr, the central found the nodes to conect *******************/
 void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary)
 {
@@ -693,25 +728,28 @@ void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t respon
 		uint8_t hola[5];
 
 		memset(eddystone_namespace, 0, 10);
-		memset(eddystone_instance, 0, 10);
+		memset(eddystone_instance, 0, 6);
 
 		wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
 
 		switch(response)
 		{
 		case 0:
+			WICED_BT_TRACE("\n ********* 1.- Call all the devices from the provisioner ** \n");
 			memcpy(eddystone_namespace,NET, sizeof(NET));
 			eddystone_namespace[3]=addr1;
 			break;
 		case 1:
-			WICED_BT_TRACE("\n ********* Sen RESPONSE ********* \n");
+			WICED_BT_TRACE("\n ********* 2.- Send RESPONSE from the node ********* \n");
 			memcpy(eddystone_namespace,CN, sizeof(CN));
 			eddystone_namespace[2]=addr1;
+			mesh_node_in_app_advertisement_data();   /* Change the name to IN NODE */
 			break;
 		case 2:
-			WICED_BT_TRACE("\n ********* Succes conection ********* \n");
+			WICED_BT_TRACE("\n ********* 3.- Succes conection ******* \n");
 			memcpy(eddystone_namespace,bdaddr_luminary,6);
-
+			WICED_BT_TRACE("\n Mac de confirmacion %B \n",bdaddr_luminary );
+			start_timer();
 			break;
 		}
 

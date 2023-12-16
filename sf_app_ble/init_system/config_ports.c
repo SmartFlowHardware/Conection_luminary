@@ -101,7 +101,6 @@ void register_pin_interrupt( void )
 {
 	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
-//	wiced_hal_gpio_register_pin_for_interrupt(PORT_INT_ACUSE, button_cback_acuse, NULL);  /* Aqui respuesta de conexion */
 	wiced_hal_gpio_register_pin_for_interrupt(PORT_INT_ACUSE, button_cback_acuse, NULL);  /* Aqui respuesta de conexion */
 	wiced_hal_gpio_register_pin_for_interrupt(PORT_INT_ON_OFF, button_cback_on_off, NULL);
 }

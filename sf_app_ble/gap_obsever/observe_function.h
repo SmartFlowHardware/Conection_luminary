@@ -68,12 +68,15 @@ uint8_t		filter_node_rsp[] = 	{ 0x43, 0x4e };												// CN
 
 //uint8_t	Filt_ID[2] = {0x42, 0x4e};											// Filter ( BN )
 
+uint8_t one_time_rsponse=0; /* Variable for initialize once the the responce */
+
 //uint8_t dataFilt[5];
 //uint8_t dataFiltBC[5];
 
 extern wiced_bool_t is_provisioned;
 extern mesh_node_t node;
 extern uint8_t copy_network[8];
+extern wiced_bt_device_address_t bda;
 
 /************************************************************************************************************************************
  *  Imported Function Declarations
@@ -101,6 +104,7 @@ extern void start_lamp_timer(void);
 extern void start_tag_timer(void);
 extern void start_node_timer(void);
 extern void start_bled_timer(void);
+extern void start_blink(void);
 
 extern void copy_info_net(uint8_t *p_info_net);
 extern void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);

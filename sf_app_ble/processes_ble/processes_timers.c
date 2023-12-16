@@ -387,7 +387,7 @@ void f_timer_node( TIMER_PARAM_TYPE arg )
  ***********************************************************************************************************************************/
 void f_timer_bled( TIMER_PARAM_TYPE arg )
 {
-	WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
+	//WICED_BT_TRACE("[%s]\r\n", __FUNCTION__);
 
 	// Variables to set the values
 	static uint8_t		counter_timer_led;
@@ -409,4 +409,28 @@ void f_timer_bled( TIMER_PARAM_TYPE arg )
 		if(counter_timer_led == 8)
 			counter_timer_led = 0;
 	}
+}
+
+extern uint8_t conection_complet;
+extern uint8_t addr11;
+void     f_timer_succes_conection( TIMER_PARAM_TYPE arg )
+{
+	conection_complet=0;
+	addr11 ++;
+	WICED_BT_TRACE("\n Final, the value of addr11 increaste %d \n",addr11);
+	stop_timer_succes();
+}
+
+extern uint8_t one_time_rsponse;
+void f_timer_blink( TIMER_PARAM_TYPE arg )
+{
+	static uint8_t stop=0;
+	wiced_hal_gpio_set_pin_output(LED2,~wiced_hal_gpio_get_pin_config(LED2));
+	if(stop == 4)
+	{
+		stop=0;
+		//one_time_rsponse=0;
+	}
+	else
+		stop++;
 }

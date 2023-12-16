@@ -51,6 +51,7 @@ extern wiced_bool_t		onoff_pressed;
 
 
 
+
 /************************************************************************************************************************************
  *  Imported Function Declarations
  ***********************************************************************************************************************************/
@@ -69,6 +70,7 @@ extern void				start_lamp_timer(void);
 extern void				start_tag_timer(void);
 extern void				start_node_timer(void);
 extern void				start_bled_timer(void);
+extern void 			stop_timer_succes(void);
 
 
 /************************************************************************************************************************************
@@ -89,5 +91,7 @@ void					f_timer_lamp( TIMER_PARAM_TYPE arg );
 void					f_timer_tag( TIMER_PARAM_TYPE arg );
 void					f_timer_node( TIMER_PARAM_TYPE arg );
 void					f_timer_bled( TIMER_PARAM_TYPE arg );
+void				    f_timer_succes_conection( TIMER_PARAM_TYPE arg );
+void 					f_timer_blink( TIMER_PARAM_TYPE arg );
 
 #endif /* SF_APP_BLE_PROCESSES_BLE_PROCESSES_TIMERS_H_ */

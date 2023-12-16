@@ -43,6 +43,12 @@ wiced_timer_t	node_timer;
 /** Declare variable to start blinking led Timer */
 wiced_timer_t	bled_timer;
 
+/** Declare variable to start blinking led Timer */
+wiced_timer_t	timer_responce;
+
+/** LED BLINK to show the response of the conection, when the provisioner save your mac  */
+wiced_timer_t	timer_blink;
+
 wiced_timer_t timer_Online;
 wiced_timer_t timer_st_Online;
 wiced_timer_t timer_inspection;
@@ -79,6 +85,10 @@ void clr_spi(void);
 void			start_lamp_timer(void);
 void			start_tag_timer(void);
 void			stop_timers(void);
+void 			start_timer(void);
+void 			stop_timer_succes(void);
+void 			start_blink(void);
+void 			stop_blink(void);
 
 void start_trOTA(uint32_t t_clk);
 
@@ -105,6 +115,8 @@ extern void 	f_timer_lamp( TIMER_PARAM_TYPE arg );
 extern void 	f_timer_tag( TIMER_PARAM_TYPE arg );
 extern void 	f_timer_node( TIMER_PARAM_TYPE arg );
 extern void		f_timer_bled( TIMER_PARAM_TYPE arg );
+extern void     f_timer_succes_conection( TIMER_PARAM_TYPE arg );
+extern void     f_timer_blink( TIMER_PARAM_TYPE arg );
 
 
 #endif /* SF_APP_BLE_INIT_SYSTEM_CONFIG_TIMERS_H_ */

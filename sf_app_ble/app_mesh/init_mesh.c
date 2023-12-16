@@ -198,11 +198,11 @@ char* transmit_node_data(mesh_node_t node, char* user_prefix)
 
 /* Procces od conetion */
 base_data data_base[SIZE];
-static uint8_t addr1 = 2;
+uint8_t addr11 = 2;     /* Variable to take control of the node to create */
 BD_ADDR  clean_bdress[6]= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 {
-	beacon_set_eddystone_uid_advertisement_data_1(addr1, 0,clean_bdress);
+	beacon_set_eddystone_uid_advertisement_data_1(addr11, 0,clean_bdress);
 }
 
 /* Base data*/
@@ -212,13 +212,13 @@ void fill_data_base(wiced_bt_ble_scan_results_t *p_scan_result,uint8_t *p_uid_no
 
 	WICED_BT_TRACE("\n FILL THE INFORMATION IN THE DATA BASE OF THE DEVICE FOUND \n");
 	uint8_t position= p_uid_node[6];
-
+	mesh_data[position].addr=p_uid_node[6]; /* The place of the strut were will stay */
 	WICED_BT_TRACE("\n P %d \n",position);
 
 	memcpy(mesh_data[position].bdaddr_luminary,p_scan_result->remote_bd_addr, 6);
 	WICED_BT_TRACE("\n Mac safe [%d] %B \n",position, mesh_data[position].bdaddr_luminary);
 
-	beacon_set_eddystone_uid_advertisement_data_1(addr1, 2,p_scan_result->remote_bd_addr); /* start he advertisment of succes conection and responce */
+	beacon_set_eddystone_uid_advertisement_data_1(position, 2,p_scan_result->remote_bd_addr); /* start he advertisment of succes conection and responce */
 
 }
 //	/* ************** Primer saber si ya tengo guardada la mac que he visto *************** */

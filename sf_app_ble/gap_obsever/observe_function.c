@@ -137,15 +137,14 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	/** ------------------------- Filters to detect the devices ------------------------- */
     	if( is_provisioned )
     	{
-
         	// ----- The Node Device is Found, add the proccess to found NODEL BSL -----
         	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
         	{
-        		/* Processes to disvocer a luminary whit close RSSI */
+        		/* 1.- Processes to disvocer a luminary whit close RSSI */
         		if(conection_complet==0)
         		{
         			Conect_process1(p_scan_result);  /* *************** */
-        			conection_complet=1;
+        			conection_complet =+ 1;
         		}
 
         		find_node = WICED_TRUE;
@@ -162,6 +161,7 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         	/* Id found the response of a device, safe all the indormation */
         	if(memcmp(CN1, &p_uid_node[4],2)==0 && conection_complet==1)
         	{
+        	  WICED_BT_TRACE("\n %s from %B \n",&p_uid_node[4], p_scan_result->remote_bd_addr);
               fill_data_base(p_scan_result, p_uid_node);
               conection_complet = 2;
         	}
@@ -186,6 +186,14 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     					conn_node_mesh = WICED_TRUE;  /* Variable to initialize ones the UID advertisement */
     				}
     			}
+    		}
+    		/* Blink of responce when the provisioner safe the information of the node */
+    		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
+    		if(memcmp(bda,&p_uid_edystone[4],6)==0 && one_time_rsponse == 0)
+    		{
+    			one_time_rsponse=1; /* Variable for initialize once the the responce */
+    			WICED_BT_TRACE("\n Response \n");
+    			start_blink();
     		}
     	}
     }

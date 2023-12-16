@@ -135,7 +135,7 @@ void button_cback_acuse( void *data, uint8_t port_pin )
 	uint32_t current_time_acuse = app_timer_count * 500; 	// Convert to milliseconds
 
 
-	beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         );  //*****************************************-----------------
+	//beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         );  //*****************************************-----------------
 	// Check if enough time has passed since the last event or the button was pressed one time
 	if ( ( (current_time_acuse - lst_btn_evt_time_acuse) < debounce_time_ms ) )
 	{
@@ -196,6 +196,7 @@ void button_cback_acuse( void *data, uint8_t port_pin )
     	}  //true in observe
     	if(   conn_node_mesh    == WICED_TRUE && is_provisioned == WICED_FALSE)  /* Respuesta de conexion ****************/
     	{
+    		wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
     		BD_ADDR  clean_bdress[6]= { 0, 0, 0, 0, 0, 0};
     																    /* Response UID */
     		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         , clean_bdress);  //*****************************************-----------------
