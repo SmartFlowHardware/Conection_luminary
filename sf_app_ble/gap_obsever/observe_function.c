@@ -70,7 +70,7 @@ void start_observe(void)
 
 extern wiced_bt_device_address_t bda;
 //wiced_bool_t conection_complet;
-uint8_t conection_complet=0;
+uint8_t conection_complet=0, conection_complet_node=0, flag=0;
 /************************************************************************************************************************************
  * Function Name: observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8_t *p_adv_data )
  * ----------------------------------------------------------------------------------------------------------------------------------
@@ -138,14 +138,14 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
     	if( is_provisioned )
     	{
         	// ----- The Node Device is Found, add the proccess to found NODEL BSL -----
-        	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
+//        	if(memcmp(NODEL_BSL1,&p_name[0],5)==0)
+//        	{
+    		flag=0;
+        	if(conection_complet == 0)
         	{
         		/* 1.- Processes to disvocer a luminary whit close RSSI */
-        		if(conection_complet==0)
-        		{
-        			Conect_process1(p_scan_result);  /* *************** */
-        			conection_complet =+ 1;
-        		}
+        		Conect_process1(p_scan_result);  /* *************** */
+        		conection_complet =+ 1;
 
         		find_node = WICED_TRUE;
         		start_node_timer();
@@ -158,42 +158,53 @@ void observer_mesh_adv_report( wiced_bt_ble_scan_results_t *p_scan_result, uint8
         		}
         		//p_data_name = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &length_scan );
         	}
-        	/* Id found the response of a device, safe all the indormation */
-        	if(memcmp(CN1, &p_uid_node[4],2)==0 && conection_complet==1)
+        	/* Id found the response of a device UID: CN20000000, first confirm the information save from the node */
+        	if(conection_complet==1 && memcmp(CN1, &p_uid_node[4],2)==0 && addr11== p_uid_node[6])
         	{
+        		WICED_BT_TRACE("\n Red responce of the nodel conection, coection complet %d \n", conection_complet);
         	  WICED_BT_TRACE("\n %s from %B \n",&p_uid_node[4], p_scan_result->remote_bd_addr);
               fill_data_base(p_scan_result, p_uid_node);
-              conection_complet = 2;
+              //conection_complet = 0; put in the end of the timer
         	}
     	}
     	/** ------------------------- Filters to connect at the network *Procces of the no central to conect with the central------------------------- */
     	else
     	{
-    		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
-    		if(p_uid_edystone != NULL)
+    		if(flag == 0)
     		{
-    			if(memcmp(KEY,&p_uid_edystone[4],3)==0)  /* Enciendo cuando  */
-    			{
-//    				WICED_BT_TRACE("\n I Found my own mac:%B \n",&p_uid_edystone[4]);
-//    				WICED_BT_TRACE_ARRAY(p_uid_edystone, 16, "Beacon UID: ");
-
-    				// Copy the information of the net
-    				if( !conn_node_mesh )
-    				{
-    					wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
-    					WICED_BT_TRACE("\n Copy the information of the net \n");
-    					copy_info_net(p_uid_edystone);   //*************  UID COMPLETO
-    					conn_node_mesh = WICED_TRUE;  /* Variable to initialize ones the UID advertisement */
-    				}
-    			}
+    			//Conect_process1(p_scan_result,1);
+    			WICED_BT_TRACE("\n Paro el UID \n");
+    			stop_uid();
+    			flag=1;
+    			conection_complet = 0;
     		}
-    		/* Blink of responce when the provisioner safe the information of the node */
-    		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
-    		if(memcmp(bda,&p_uid_edystone[4],6)==0 && one_time_rsponse == 0)
+    		if(conection_complet_node == 0)
     		{
-    			one_time_rsponse=1; /* Variable for initialize once the the responce */
-    			WICED_BT_TRACE("\n Response \n");
-    			start_blink();
+        		p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
+        		if(p_uid_edystone != NULL)
+        		{
+        			if(memcmp(KEY,&p_uid_edystone[4],3)==0)  /* If i read NET, is the word that the provisioner send to add nodes  */
+        			{										 /* Read:NET2000000 in the UID  */
+    //    				WICED_BT_TRACE_ARRAY(p_uid_edystone, 16, "Beacon UID: ");
+        				// Copy the information of the net
+        				START_LED_provisioner();		/* Turn of the LED THAT indicate the closer of the provisioner */
+        				wiced_hal_gpio_configure_pin(LED_NODE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH); /* Turn on the led to indicate the provisioner*/
+        				WICED_BT_TRACE("\n Copy net information \n");
+        				copy_info_net(p_uid_edystone);   //*************  Complet UID
+        			}
+        		}
+    		}
+    		else if(conection_complet_node == 1)
+    		{
+    			/* Blink of responce when the provisioner safe the information of the node */
+    			p_uid_edystone = wiced_bt_ble_check_advertising_data( p_adv_data, BTM_BLE_ADVERT_TYPE_SERVICE_DATA, &lengthmac );
+    			if(memcmp(bda,&p_uid_edystone[4],6)==0)
+    			{
+    				WICED_BT_TRACE("\n Response \n");
+    				stop_uid();
+    				start_blink();
+    				conection_complet_node =2;
+    			}
     		}
     	}
     }

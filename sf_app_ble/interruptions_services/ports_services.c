@@ -192,15 +192,19 @@ void button_cback_acuse( void *data, uint8_t port_pin )
             	mode_send_info = WICED_TRUE;
             	gap_rebroadcastLR(BEACON_INFO_MESH_UID_ADV,0);
             }
+            wiced_hal_gpio_configure_pin(LED_NODE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+            BD_ADDR  clean_bdress[6]= { 0, 0, 0, 0, 0, 0};
+            /* Response UID */
+            beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         , clean_bdress);  //*****************************************-----------------
 
     	}  //true in observe
-    	if(   conn_node_mesh    == WICED_TRUE && is_provisioned == WICED_FALSE)  /* Respuesta de conexion ****************/
-    	{
-    		wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
-    		BD_ADDR  clean_bdress[6]= { 0, 0, 0, 0, 0, 0};
-    																    /* Response UID */
-    		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         , clean_bdress);  //*****************************************-----------------
-    	}
+//    	if(   conn_node_mesh    == WICED_TRUE && is_provisioned == WICED_FALSE)  /* Respuesta de conexion ****************/
+//    	{
+//    		wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+//    		BD_ADDR  clean_bdress[6]= { 0, 0, 0, 0, 0, 0};
+//    																    /* Response UID */
+//    		beacon_set_eddystone_uid_advertisement_data_1(info_mesh.addr,        1         , clean_bdress);  //*****************************************-----------------
+//    	}
     	btn_push_tm_acuse = 0; 						// Reset the time of button after process the event
     	lst_btn_evt_time_acuse = current_time_acuse;
 	}

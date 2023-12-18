@@ -29,8 +29,8 @@
 #define LED_VEHICLE			WICED_P34
 #define LED_PERSON			WICED_P38
 
-#define LED1 				WICED_P27
-#define LED2 				WICED_P26
+#define LED_NODE 				WICED_P07
+#define LED_SUCCES 				WICED_P06
 
 
 /** Pin state for when a button is pressed. **/

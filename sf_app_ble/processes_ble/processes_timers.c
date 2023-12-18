@@ -413,10 +413,12 @@ void f_timer_bled( TIMER_PARAM_TYPE arg )
 
 extern uint8_t conection_complet;
 extern uint8_t addr11;
+BD_ADDR  clean_bdress[6]= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 void     f_timer_succes_conection( TIMER_PARAM_TYPE arg )
 {
-	conection_complet=0;
 	addr11 ++;
+	beacon_set_eddystone_uid_advertisement_data_1(addr11, 0,clean_bdress); /* Send the addres and option to radite */
+	conection_complet=0;
 	WICED_BT_TRACE("\n Final, the value of addr11 increaste %d \n",addr11);
 	stop_timer_succes();
 }
@@ -425,12 +427,20 @@ extern uint8_t one_time_rsponse;
 void f_timer_blink( TIMER_PARAM_TYPE arg )
 {
 	static uint8_t stop=0;
-	wiced_hal_gpio_set_pin_output(LED2,~wiced_hal_gpio_get_pin_config(LED2));
+	wiced_hal_gpio_set_pin_output(LED_SUCCES,!wiced_hal_gpio_get_pin_output(LED_SUCCES));
 	if(stop == 4)
 	{
 		stop=0;
+		stop_blink();
 		//one_time_rsponse=0;
 	}
 	else
 		stop++;
+}
+
+void f_timer_seePr( TIMER_PARAM_TYPE arg )
+{
+	WICED_BT_TRACE("\n Apago el led \n");
+	wiced_hal_gpio_configure_pin(LED_NODE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+	STOP_LED_provisioner();
 }

@@ -85,6 +85,7 @@ void config_clk_timers(void)
 
 	wiced_init_timer( &timer_responce, f_timer_succes_conection, 0,WICED_SECONDS_PERIODIC_TIMER);   // Response to succes conection
 	wiced_init_timer( &timer_blink, f_timer_blink, 0,WICED_MILLI_SECONDS_PERIODIC_TIMER);   // LED blink to view
+	wiced_init_timer( &timer_ledSEE_provisioner, f_timer_seePr, 0,WICED_SECONDS_PERIODIC_TIMER);   // LED blink to view
 }
 
 
@@ -368,6 +369,7 @@ void stop_timers(void)
 
 void start_timer(void)  /* Start timer Success */
 {
+	WICED_BT_TRACE("\n Init timer to send respnce once \n");
 	wiced_start_timer(&timer_responce, 2);
 }
 
@@ -383,4 +385,14 @@ void 			start_blink(void)
 void 			stop_blink(void)
 {
 	wiced_stop_timer(&timer_blink);
+}
+
+void START_LED_provisioner(void)
+{
+	wiced_start_timer(&timer_ledSEE_provisioner,3);
+}
+
+void STOP_LED_provisioner(void)
+{
+	wiced_stop_timer(&timer_ledSEE_provisioner);
 }

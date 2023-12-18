@@ -61,8 +61,8 @@ void set_outPuts( void )
 	wiced_hal_gpio_configure_pin(LED_PERSON, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
 
 	/* CYW920819EVB-02 */
-	wiced_hal_gpio_configure_pin(LED1, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
-	wiced_hal_gpio_configure_pin(LED2, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_HIGH);
+	wiced_hal_gpio_configure_pin(LED_NODE, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
+	wiced_hal_gpio_configure_pin(LED_SUCCES, GPIO_OUTPUT_ENABLE, GPIO_PIN_OUTPUT_LOW);
 }
 
 

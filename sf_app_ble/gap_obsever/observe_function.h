@@ -105,11 +105,15 @@ extern void start_tag_timer(void);
 extern void start_node_timer(void);
 extern void start_bled_timer(void);
 extern void start_blink(void);
+extern void START_LED_provisioner(void);
 
 extern void copy_info_net(uint8_t *p_info_net);
 extern void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
+extern void stop_uid(void);
 
 //extern             void start_trOTA(uint32_t t_clk);
+/* Integer to control the provisioner */
+extern uint8_t addr11;
 
 
 

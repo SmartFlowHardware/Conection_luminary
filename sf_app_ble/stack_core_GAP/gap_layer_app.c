@@ -715,6 +715,7 @@ void gap_rebroadcastLR(int8_t slt, uint8_t addr)
 
 }
 
+extern uint8_t conection_complet_node;
 /*************   Start advertisement whith the MAC and addr, the central found the nodes to conect *******************/
 void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary)
 {
@@ -741,15 +742,19 @@ void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t respon
 			break;
 		case 1:
 			WICED_BT_TRACE("\n ********* 2.- Send RESPONSE from the node ********* \n");
-			memcpy(eddystone_namespace,CN, sizeof(CN));
+			conection_complet_node =1;
+			memcpy(eddystone_namespace,CN, sizeof(CN));   /* I will send CN02  */
 			eddystone_namespace[2]=addr1;
 			mesh_node_in_app_advertisement_data();   /* Change the name to IN NODE */
 			break;
 		case 2:
 			WICED_BT_TRACE("\n ********* 3.- Succes conection ******* \n");
 			memcpy(eddystone_namespace,bdaddr_luminary,6);
-			WICED_BT_TRACE("\n Mac de confirmacion %B \n",bdaddr_luminary );
+			WICED_BT_TRACE("\n Mac de confirmacion %B \n",bdaddr_luminary ); /* Send the mac of the device save */
 			start_timer();
+			break;
+		case 3:
+			/* Only clean the UID */
 			break;
 		}
 
@@ -776,6 +781,11 @@ void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t respon
 	    wiced_start_multi_advertisements(MULTI_ADVERT_START, BEACON_EDDYSTONE_UID);
 }
 
+/* Funtion stop UID */
+void stop_uid(void)
+{
+	wiced_start_multi_advertisements(MULTI_ADVERT_STOP, BEACON_EDDYSTONE_UID);
+}
 /************************************************************************************************************************************
  * Function Name: stop_rbdkst(void)
  * ----------------------------------------------------------------------------------------------------------------------------------

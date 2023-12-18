@@ -124,6 +124,7 @@ void                            stop_rbdkst(void);
 void                            gap_rebroadcastLR(int8_t slt,uint8_t addr);
 void							gap_rebroadcastURL(int8_t slt);
 void 							gap_rebroadcastBIO(uint8_t t_sensor, uint16_t data_device);
+void 							stop_uid(void);
 
 static void 					beacon_set_eddystone_uid_advertisement_data(void);
 static void 					beacon_set_eddystone_ibeacon_advertisement_data();

@@ -71,6 +71,8 @@ extern void				start_tag_timer(void);
 extern void				start_node_timer(void);
 extern void				start_bled_timer(void);
 extern void 			stop_timer_succes(void);
+extern void 			stop_blink(void);
+extern void	 			STOP_LED_provisioner(void);
 
 
 /************************************************************************************************************************************
@@ -93,5 +95,8 @@ void					f_timer_node( TIMER_PARAM_TYPE arg );
 void					f_timer_bled( TIMER_PARAM_TYPE arg );
 void				    f_timer_succes_conection( TIMER_PARAM_TYPE arg );
 void 					f_timer_blink( TIMER_PARAM_TYPE arg );
+void 					f_timer_seePr( TIMER_PARAM_TYPE arg );
+
+extern void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary[]);
 
 #endif /* SF_APP_BLE_PROCESSES_BLE_PROCESSES_TIMERS_H_ */

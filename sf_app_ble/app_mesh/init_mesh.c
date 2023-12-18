@@ -199,10 +199,12 @@ char* transmit_node_data(mesh_node_t node, char* user_prefix)
 /* Procces od conetion */
 base_data data_base[SIZE];
 uint8_t addr11 = 2;     /* Variable to take control of the node to create */
-BD_ADDR  clean_bdress[6]= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+BD_ADDR  clean_bdress1[6]= { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result)
 {
-	beacon_set_eddystone_uid_advertisement_data_1(addr11, 0,clean_bdress);
+		beacon_set_eddystone_uid_advertisement_data_1(addr11, 0,clean_bdress1); /* Send the addres and option to radite */
+		WICED_BT_TRACE("\n Addres to conect %d \n", addr11);
+
 }
 
 /* Base data*/
@@ -221,68 +223,4 @@ void fill_data_base(wiced_bt_ble_scan_results_t *p_scan_result,uint8_t *p_uid_no
 	beacon_set_eddystone_uid_advertisement_data_1(position, 2,p_scan_result->remote_bd_addr); /* start he advertisment of succes conection and responce */
 
 }
-//	/* ************** Primer saber si ya tengo guardada la mac que he visto *************** */
-//	safe_macs=0;
-//	for(int i=0; i<SIZE;i++)
-//	{
-//		if(memcmp(data_base[i].bdaddr_luminary,p_scan_result->remote_bd_addr,6)==0 && p_scan_result->remote_bd_addr[0] != 0 && p_scan_result->remote_bd_addr[1] != 0 && p_scan_result->remote_bd_addr[2] != 0)     /* Primero saber si ya tengo la mac, si la tengo renuevo su RSSI y si su RSSI ha aumentado, si lo ha hecho  */
-//		{
-//			data_base[i].rssi= p_scan_result->rssi;   //Actualizo su vaor de RSSI
-//			safe_macs=1;  /* flag to know if I already have this mac saved */
-//		}
-//	}
-//	/* ********************************************************************************* */
-//
-//	/* ******************** Si no tengo la mac acomodar en un espacio disponible******** */
-//	if(safe_macs == 0)	 /* Nunca entro, no tengo esta mac guardada en mi arreglo, ademas voy a ver si ya estoy lleno */
-//	{
-//			for(int i=0; i<SIZE;i++)
-//			{
-//				if(array_mac[i] == 0)  /* Si vale cero, aqui guardare la nueva mac  */
-//				{
-//					memcpy(data_base[i].bdaddr_luminary,p_scan_result->remote_bd_addr,6);
-//					data_base[i].rssi= p_scan_result->rssi;
-//					array_mac[i]=1;                                             /* Mac guaedada en la posicion i */
-//					data_base[i].conection_status = 0;  /* init process conection */
-//					break;
-//				}
-//			}
-//	}
-//
-//
-//	for(int i=0; i<SIZE;i++)   // 0 -5 0 -2 -3    quitadno espacios solos
-//	{
-//		if(array_mac[i] == 0 && array_mac[i+1] !=0)
-//		{
-//			memcpy(data_base[i].bdaddr_luminary,data_base[i+1].bdaddr_luminary,6);
-//			memset(data_base[i+1].bdaddr_luminary,'\0',6); /* limpio */
-//			data_base[i].rssi=data_base[i+1].rssi;
-//			data_base[i+1].rssi=0;		                 /* limpio */
-//
-//			array_mac[i+1]=0;
-//			array_mac[i]=1;                   /* En el actual ya tengo algo */
-//		}
-//	}
-//	WICED_BT_TRACE("\n Macs vistas \n");  /* Esto no va necesariamente */
-//	for(int i=0; i<SIZE;i++)
-//	{
-//		WICED_BT_TRACE("\n [%d] %B \n",i,data_base[i].bdaddr_luminary);   /* NODEL BSL */
-//	}
 
-	//static uint8_t addr1 = 2;
-
-//	/* Inicio proceso de conexion, bandera para preguntar solo una vez una bandera */
-//	for(int i= 0; i<SIZE;i++)
-//	{	   /* Si hay algo */
-//		if(array_mac[i]==1 && data_base[i].conection_status == 0 && status_flag==WICED_FALSE)   /* Tengo una MAC guardada en esta posicion, y ademas no tengo una conexion en ese lugar, nicia conexion */
-//		{
-//			status_flag=WICED_TRUE;  /* start advertisements ones */
-//			data_base[i].addr=addr1;
-//			beacon_set_eddystone_uid_advertisement_data_1(data_base[i].bdaddr_luminary, addr1);
-//			addr1 ++;   /* Asigned addres */
-//			/* Si se logra realizar la conexion conection_status valdra 1, si no se completa valdra 0 y despues de un rato se borrara para iniciar otra conección */
-//			break;
-//		}
-//	}
-
-//}

@@ -49,6 +49,9 @@ wiced_timer_t	timer_responce;
 /** LED BLINK to show the response of the conection, when the provisioner save your mac  */
 wiced_timer_t	timer_blink;
 
+/** Variable to turn on the LED when is close a provisioner */
+wiced_timer_t	timer_ledSEE_provisioner;
+
 wiced_timer_t timer_Online;
 wiced_timer_t timer_st_Online;
 wiced_timer_t timer_inspection;
@@ -89,6 +92,8 @@ void 			start_timer(void);
 void 			stop_timer_succes(void);
 void 			start_blink(void);
 void 			stop_blink(void);
+void 			START_LED_provisioner(void);
+void 			STOP_LED_provisioner(void);
 
 void start_trOTA(uint32_t t_clk);
 
@@ -117,6 +122,7 @@ extern void 	f_timer_node( TIMER_PARAM_TYPE arg );
 extern void		f_timer_bled( TIMER_PARAM_TYPE arg );
 extern void     f_timer_succes_conection( TIMER_PARAM_TYPE arg );
 extern void     f_timer_blink( TIMER_PARAM_TYPE arg );
+extern void 	f_timer_seePr( TIMER_PARAM_TYPE arg );
 
 
 #endif /* SF_APP_BLE_INIT_SYSTEM_CONFIG_TIMERS_H_ */
