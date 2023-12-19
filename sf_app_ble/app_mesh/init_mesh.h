@@ -23,11 +23,16 @@
 #define SIZE 10
 /* Multi advertisement instance ID */
 #define BEACON_EDDYSTONE_UID 1
+#define SIZE_100 100
+
+
 
 uint8_t safe_macs, array_mac[SIZE];  /* Used for safe the status of the data full */
 uint8_t conection_status[10]={0,0,0,0,0,0,0,0,0,0};   /* Variable que se usará para el estatus de conexión */
 uint8_t addr[10];
 wiced_result_t         status_flag= WICED_FALSE;  /* Fla for only start one time the advertisement */
+
+uint16_t		numbytesP;                        /* Va */
 
 void Conect_process1(wiced_bt_ble_scan_results_t *p_scan_result);
 extern void beacon_set_eddystone_uid_advertisement_data_1(uint8_t addr1, uint8_t response, BD_ADDR  bdaddr_luminary[]);

@@ -19,6 +19,7 @@
 #include "mesh_definitions.h"
 #include "init_mesh.h"
 #include <string.h>
+#include "wiced_hal_nvram.h"
 
 
 void prepare_network_info(const mesh_node_t *node, uint8_t *inf_network)
@@ -220,7 +221,8 @@ void fill_data_base(wiced_bt_ble_scan_results_t *p_scan_result,uint8_t *p_uid_no
 	memcpy(mesh_data[position].bdaddr_luminary,p_scan_result->remote_bd_addr, 6);
 	WICED_BT_TRACE("\n Mac safe [%d] %B \n",position, mesh_data[position].bdaddr_luminary);
 
+	//numbytesP = wiced_hal_read_nvram(SIZE_100 + position , sizeof(mesh_data[position]), (uint8_t*)&node, &result) != sizeof(node);
+
 	beacon_set_eddystone_uid_advertisement_data_1(position, 2,p_scan_result->remote_bd_addr); /* start he advertisment of succes conection and responce */
 
 }
-
